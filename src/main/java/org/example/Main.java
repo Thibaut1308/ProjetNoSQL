@@ -1,30 +1,30 @@
 package org.example;
 
-import com.mongodb.client.MongoClient;
-import com.mongodb.client.MongoClients;
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
+import MongoDB.MongoDBDao;
+import Protein.ProteinData;
+import com.google.gson.Gson;
 import org.bson.Document;
 
 
 public class Main {
     public static void main(String[] args) {
-        MongoClient mongoClient = MongoClients.create("mongodb://localhost:27017/");
-        MongoDatabase database = mongoClient.getDatabase("UniProt");
-        MongoCollection<Document> collection =  database.getCollection("UniProt");
 
+        MongoDBDao mongoDatabase = MongoDBDao.getInstance();
+        // Query all documents where field "EC number" equals "1.14.14.1
         Document query = new Document("EC number","1.14.14.1");
-
         // Get the first document
-        Document result = collection.find(query).first();
+        Document result = (Document) mongoDatabase.getCollection().find(query).first();
+
         // Process the result
         if (result != null) {
-            System.out.println("Found document: " + result.toJson());
+            // Map JSON into ProteinData object
+            Gson gson = new Gson();
+            ProteinData data = gson.fromJson(result.toJson(),ProteinData.class);
+            System.out.println("Found protein: " + data.getProteinName());
         } else {
             System.out.println("Document not found.");
         }
-
         // Close the MongoDB connection
-        mongoClient.close();
+        mongoDatabase.closeConnection();
     }
 }
