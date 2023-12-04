@@ -22,7 +22,7 @@ public class ProteinData {
     private String sequence;
     @SerializedName("EC number")
     private String ecNumber;
-    @SerializedName("Gene Ontology(GO)")
+    @SerializedName("Gene Ontology (GO)")
     private String geneOntology;
 
 }
