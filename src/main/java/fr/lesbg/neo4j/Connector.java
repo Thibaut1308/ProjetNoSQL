@@ -2,13 +2,13 @@ package fr.lesbg.neo4j;
 
 import fr.lesbg.Protein.ProteinData;
 import fr.lesbg.Protein.ProteinDataBuilder;
+import fr.lesbg.Protein.ProteinLinks;
+import fr.lesbg.Protein.ProteinLinksBuilder;
 import org.neo4j.driver.*;
 import org.neo4j.driver.Record;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class Connector {
 
@@ -30,19 +30,76 @@ public class Connector {
         driver.close();
     }
 
-    public void createLinks(String entry) {
+    public List<ProteinLinks> createLinksReturnProteinNeighborsAndNeighborsOfNeighbors(String entry) {
         try (Session session = driver.session()) {
-            session.run(
+            return session.executeWrite(tx -> {
+                Result result = tx.run(
                     """
-                    MATCH (source:Protein {entry: '$proteinName'})-[:HAS_DOMAIN]->(commonDomain)<-[:HAS_DOMAIN]-(neighbor:Protein)
-                    MERGE (source)-[:SHARES_DOMAIN_WITH]->(neighbor)
-                    WITH source, neighbor
-                    MATCH (neighbor)-[:HAS_DOMAIN]->(commonDomainNeighbor)<-[:HAS_DOMAIN]-(neighborNeighbor:Protein)
-                    MERGE (neighbor)-[:SHARES_DOMAIN_WITH]->(neighborNeighbor);
-                    """,
+                        MATCH (source:Protein {entry: $proteinName})-[:HAS_DOMAIN]->(d)
+                        WITH source, COLLECT(id(d)) AS sourceDomains
+                        MATCH (source)-[:HAS_DOMAIN]->(commonDomain)<-[:HAS_DOMAIN]-(neighbor:Protein)
+                        WHERE NOT source = neighbor
+                        WITH source, sourceDomains, neighbor, COLLECT(id(commonDomain)) AS commonDomains
+                        MATCH (neighbor)-[:HAS_DOMAIN]->(d)
+                        WITH source, sourceDomains, neighbor, commonDomains, COLLECT(id(d)) AS neighborDomains
+                        MERGE (source)-[r:SHARES_DOMAIN_WITH]->(neighbor)
+                        WITH source, neighbor, r, SIZE(apoc.coll.intersection(sourceDomains, neighborDomains)) * 1.0 / SIZE(apoc.coll.union(sourceDomains, neighborDomains)) AS jaccard
+                        WHERE jaccard >= 0.5
+                        SET r.jaccard = jaccard
+                        
+                        WITH r, neighbor, source
+                        MATCH (neighbor)-[:HAS_DOMAIN]->(d2)
+                        WITH r, neighbor, source, COLLECT(id(d2)) AS sourceDomains2
+                        MATCH (neighbor)-[:HAS_DOMAIN]->(commonDomain2)<-[:HAS_DOMAIN]-(neighborNeighbor:Protein)
+                        WHERE NOT neighbor = neighborNeighbor AND NOT source = neighborNeighbor
+                        WITH r, source, neighbor, sourceDomains2, neighborNeighbor, COLLECT(id(commonDomain2)) AS commonDomains2
+                        MATCH (neighborNeighbor)-[:HAS_DOMAIN]->(d2)
+                        WITH r, source, neighbor, sourceDomains2, neighborNeighbor, commonDomains2, COLLECT(id(d2)) AS neighborDomains2
+                        MERGE (neighbor)-[r2:SHARES_DOMAIN_WITH]->(neighborNeighbor)
+                        WITH source, neighbor, neighborNeighbor,r, r2, SIZE(apoc.coll.intersection(sourceDomains2, neighborDomains2)) * 1.0 / SIZE(apoc.coll.union(sourceDomains2, neighborDomains2)) AS jaccard2
+                        WHERE jaccard2 >= 0.5
+                        WITH source, neighbor, neighborNeighbor, r, r2, jaccard2
+                        SET r2.jaccard2 = jaccard2
+                        WITH source, neighbor, neighborNeighbor, r, r2
+                        
+                        RETURN source, neighbor, neighborNeighbor, r, r2;
+                            """,
                     Values.parameters("proteinName", entry)
             );
+                List<ProteinLinks> proteinLinks = new ArrayList<>();
+                while (result.hasNext()) {
+                    Record record = result.next();
+                    ProteinDataBuilder proteinDataBuilder = new ProteinDataBuilder();
+                    Value source = record.get("source");
+                    Value neighbor = record.get("neighbor");
+                    Value neighborNeighbor = record.get("neighborNeighbor");
+
+                    ProteinData sourceProtein = buildProteinData(proteinDataBuilder, source);
+
+                    ProteinData neighborProtein = buildProteinData(proteinDataBuilder, neighbor);
+
+                    ProteinData neighborNeighborProtein =  buildProteinData(proteinDataBuilder, neighborNeighbor);
+
+                    ProteinLinksBuilder proteinLinksBuilder = new ProteinLinksBuilder();
+                    proteinLinksBuilder.setSource(sourceProtein)
+                            .setNeighbor(neighborProtein)
+                            .setNeighborOfNeighbor(neighborNeighborProtein);
+                    proteinLinks.add(proteinLinksBuilder.createProteinLinks());
+                }
+                return proteinLinks;
+            });
         }
+    }
+
+    private ProteinData buildProteinData(ProteinDataBuilder proteinDataBuilder, Value source) {
+        proteinDataBuilder.setEntry(source.get("entry").asString())
+                .setEntryName(source.get("entryName").asString())
+                .setProteinNames(source.get("proteinNames").asString())
+                .setInterPro(source.get("interPro").asString())
+                .setSequence(source.get("sequence").asString())
+                .setEcNumber(source.get("ecNumber").asString())
+                .setGeneOntology(source.get("geneOntology").asString());
+        return proteinDataBuilder.createProteinData();
     }
 
     public ProteinData getProteinFromEntry(String entry) {
@@ -127,7 +184,7 @@ public class Connector {
     }
 
     public List<ProteinData> getNeighborsFromProtein(ProteinData protein) {
-        this.createLinks(protein.getEntry()); // Create links between proteins if they share a domain
+        this.createLinksReturnProteinNeighborsAndNeighborsOfNeighbors(protein.getEntry()); // Create links between proteins if they share a domain
         try (Session session = driver.session()) {
             return session.executeRead(tx -> {
                 Result result = tx.run(
@@ -156,15 +213,7 @@ public class Connector {
         }
     }
 
-    public Map<ProteinData, List<ProteinData>> getNeighborsAndNeigborsofNeighborsFromProtein(ProteinData protein) {
-        this.createLinks(protein.getEntry()); // Create links between proteins if they share a domain
-        Map<ProteinData, List<ProteinData>> neighborsAndNeighborsOfNeighbors = new HashMap<>();
-        List<ProteinData> neighbors = this.getNeighborsFromProtein(protein);
-        for (ProteinData neighbor : neighbors) {
-            this.createLinks(neighbor.getEntry()); // Create links between proteins if they share a domain
-            List<ProteinData> neighborsOfNeighbor = this.getNeighborsFromProtein(neighbor);
-            neighborsAndNeighborsOfNeighbors.put(neighbor, neighborsOfNeighbor);
-        }
-        return neighborsAndNeighborsOfNeighbors;
+    public List<ProteinLinks> getNeighborsAndNeigborsofNeighborsFromProtein(ProteinData protein) {
+        return this.createLinksReturnProteinNeighborsAndNeighborsOfNeighbors(protein.getEntry()); // Create links between proteins if they share a domain
     }
 }
