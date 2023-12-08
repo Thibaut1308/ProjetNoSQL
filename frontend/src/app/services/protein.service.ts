@@ -2,6 +2,7 @@ import {Injectable} from "@angular/core";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {ProteinModel} from "../model/protein.model";
 import {Observable} from "rxjs";
+import {ProteinlinksModel} from "../model/proteinlinks.model";
 
 @Injectable({
   providedIn: 'root'
@@ -38,8 +39,8 @@ export class ProteinService {
     });
   }
 
-  public getNeighborsAndNeigborsofNeighborsFromEntry(entry: string): Observable<Map<ProteinModel, ProteinModel[]>>  {
-    return this.http.get<Map<ProteinModel, ProteinModel[]>>(this.domain + "/neighboursAndNeighboursOfNeighbours/" + entry, {
+  public getNeighborsAndNeigborsofNeighborsFromEntry(entry: string): Observable<ProteinlinksModel[]>  {
+    return this.http.get<ProteinlinksModel[]>(this.domain + "/neighboursAndNeighboursOfNeighbours/" + entry, {
       headers: new HttpHeaders().set('Content-Type', 'application/json')
     });
   }

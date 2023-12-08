@@ -3,7 +3,7 @@ import {NodeModel} from "./model/node.model";
 import {LinkModel} from "./model/link.model";
 import {ProteinModel} from "./model/protein.model";
 import {ProteinService} from "./services/protein.service";
-import {FormGroup} from "@angular/forms";
+import {ProteinlinksModel} from "./model/proteinlinks.model";
 
 @Component({
   selector: 'app-root',
@@ -20,6 +20,7 @@ export class AppComponent {
   dataSourceNeighboursOfNeighbours: Map<ProteinModel, ProteinModel[]> = new Map<ProteinModel, ProteinModel[]>();
   options: string[] = ["Entry","EntryName","ProteinNames"];
   selectedOption: string = "";
+  dataSourceNeighboursOfNeighbours: ProteinlinksModel[] = [];
 
   constructor(private proteinService: ProteinService) {
     this.nodes.push(new NodeModel("n1", "Node 1"));
@@ -34,8 +35,6 @@ export class AppComponent {
     this.links.push(new LinkModel("l4", "n2", "n4", "Link 4"));
     this.links.push(new LinkModel("l5", "n3", "n4", "Link 5"));
     this.links.push(new LinkModel("l6", "n3", "n5", "Link 6"));
-    this.links.push(new LinkModel("l7", "n5", "n1", "Link 7"));
-
   }
 
   public updateInput($event: KeyboardEvent) {
@@ -46,7 +45,7 @@ export class AppComponent {
     this.proteinService.getProteinFromEntry(this.inputValue).subscribe(data => {
       this.dataSourceProtein = data;
       this.dataSourceNeighbours = [];
-      this.dataSourceNeighboursOfNeighbours = new Map<ProteinModel, ProteinModel[]>();
+      this.dataSourceNeighboursOfNeighbours = [];
     });
   }
 
@@ -54,7 +53,7 @@ export class AppComponent {
     this.proteinService.getProteinFromEntryName(this.inputValue).subscribe(data => {
       this.dataSourceProtein = data;
       this.dataSourceNeighbours = [];
-      this.dataSourceNeighboursOfNeighbours = new Map<ProteinModel, ProteinModel[]>();
+      this.dataSourceNeighboursOfNeighbours = [];
     });
   }
 
@@ -62,7 +61,7 @@ export class AppComponent {
     this.proteinService.getProteinFromDescription(this.inputValue).subscribe(data => {
       this.dataSourceProtein = data;
       this.dataSourceNeighbours = [];
-      this.dataSourceNeighboursOfNeighbours = new Map<ProteinModel, ProteinModel[]>();
+      this.dataSourceNeighboursOfNeighbours = [];
     });
   }
 
@@ -75,6 +74,7 @@ export class AppComponent {
   public getNeighborsAndNeighborsOfNeighbors() {
     this.proteinService.getNeighborsAndNeigborsofNeighborsFromEntry(this.dataSourceProtein.entry).subscribe(data => {
       this.dataSourceNeighboursOfNeighbours = data;
+      console.log(data);
     });
   }
 
