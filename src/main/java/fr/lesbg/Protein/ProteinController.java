@@ -3,18 +3,19 @@ package fr.lesbg.Protein;
 import fr.lesbg.neo4j.Connector;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.Map;
 
-@RestController("/protein")
+@RestController
+@RequestMapping("/protein")
 public class ProteinController {
 
     private final Connector connector = Connector.getInstance();
 
     @GetMapping("/entry/{entry}")
-    public ProteinData getProteinFromEntry(@PathVariable String entry) {
+    public ProteinData getProteinFromEntry(@PathVariable("entry") String entry) {
         return connector.getProteinFromEntry(entry);
     }
 
@@ -35,7 +36,7 @@ public class ProteinController {
     }
 
     @GetMapping("/neighboursAndNeighboursOfNeighbours/{entry}")
-    public Map<ProteinData, List<ProteinData>> getProteinNeighboursAndNeighboursOfNeighbours(@PathVariable String entry) {
+    public List<ProteinLinks> getProteinNeighboursAndNeighboursOfNeighbours(@PathVariable("entry") String entry) {
         ProteinData proteinData = connector.getProteinFromEntry(entry);
         return connector.getNeighborsAndNeigborsofNeighborsFromProtein(proteinData);
     }

@@ -3,6 +3,7 @@ import {NodeModel} from "./model/node.model";
 import {LinkModel} from "./model/link.model";
 import {ProteinModel} from "./model/protein.model";
 import {ProteinService} from "./services/protein.service";
+import {ProteinlinksModel} from "./model/proteinlinks.model";
 
 @Component({
   selector: 'app-root',
@@ -16,7 +17,7 @@ export class AppComponent {
   inputValue: string = '';
   dataSourceProtein: ProteinModel = ProteinModel.EMPTY_PROTEIN;
   dataSourceNeighbours: ProteinModel[] = [];
-  dataSourceNeighboursOfNeighbours: Map<ProteinModel, ProteinModel[]> = new Map<ProteinModel, ProteinModel[]>();
+  dataSourceNeighboursOfNeighbours: ProteinlinksModel[] = [];
 
   constructor(private proteinService: ProteinService) {
     this.nodes.push(new NodeModel("n1", "Node 1"));
@@ -41,7 +42,7 @@ export class AppComponent {
     this.proteinService.getProteinFromEntry(this.inputValue).subscribe(data => {
       this.dataSourceProtein = data;
       this.dataSourceNeighbours = [];
-      this.dataSourceNeighboursOfNeighbours = new Map<ProteinModel, ProteinModel[]>();
+      this.dataSourceNeighboursOfNeighbours = [];
     });
   }
 
@@ -49,7 +50,7 @@ export class AppComponent {
     this.proteinService.getProteinFromEntryName(this.inputValue).subscribe(data => {
       this.dataSourceProtein = data;
       this.dataSourceNeighbours = [];
-      this.dataSourceNeighboursOfNeighbours = new Map<ProteinModel, ProteinModel[]>();
+      this.dataSourceNeighboursOfNeighbours = [];
     });
   }
 
@@ -57,7 +58,7 @@ export class AppComponent {
     this.proteinService.getProteinFromDescription(this.inputValue).subscribe(data => {
       this.dataSourceProtein = data;
       this.dataSourceNeighbours = [];
-      this.dataSourceNeighboursOfNeighbours = new Map<ProteinModel, ProteinModel[]>();
+      this.dataSourceNeighboursOfNeighbours = [];
     });
   }
 
@@ -70,6 +71,7 @@ export class AppComponent {
   public getNeighborsAndNeighborsOfNeighbors() {
     this.proteinService.getNeighborsAndNeigborsofNeighborsFromEntry(this.dataSourceProtein.entry).subscribe(data => {
       this.dataSourceNeighboursOfNeighbours = data;
+      console.log(data);
     });
   }
 }
