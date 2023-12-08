@@ -1,4 +1,4 @@
-package Protein;
+package fr.lesbg.Protein;
 
 import org.bson.types.ObjectId;
 

@@ -1,7 +1,6 @@
-package neo4j;
+package fr.lesbg.neo4j;
 
-import Protein.ProteinData;
-import org.neo4j.driver.*;
+import fr.lesbg.Protein.ProteinData;
 
 import java.util.List;
 import java.util.Map;

@@ -1,7 +1,7 @@
-package neo4j;
+package fr.lesbg.neo4j;
 
-import Protein.ProteinData;
-import Protein.ProteinDataBuilder;
+import fr.lesbg.Protein.ProteinData;
+import fr.lesbg.Protein.ProteinDataBuilder;
 import org.neo4j.driver.*;
 import org.neo4j.driver.Record;
 

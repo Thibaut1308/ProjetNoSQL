@@ -1,6 +1,6 @@
-package MongoDB;
+package fr.lesbg.MongoDB;
 
-import Protein.ProteinData;
+import fr.lesbg.Protein.ProteinData;
 import com.google.gson.Gson;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
@@ -26,12 +26,12 @@ public class MongoDBDao {
         setMongoClient(MongoClients.create("mongodb://localhost:27017/"));
         setDatabase(mongoClient.getDatabase("UniProt"));
         setCollection(database.getCollection("UniProt"));
-        System.out.println("Opened MongoDB connection with database " + database.getName() + " with collection " + collection.getNamespace().getCollectionName());
+        System.out.println("Opened fr.lesbg.MongoDB connection with database " + database.getName() + " with collection " + collection.getNamespace().getCollectionName());
     }
 
     public void closeConnection() {
         getMongoClient().close();
-        System.out.println("MongoDB connection closed successfully.");
+        System.out.println("fr.lesbg.MongoDB connection closed successfully.");
     }
 
     public static MongoDBDao getInstance() {
@@ -79,7 +79,7 @@ public class MongoDBDao {
     public List<ProteinData> getProteinByName(String name) {
         List<ProteinData> results = new ArrayList<>();
         String regex = ".*"+name+".*";
-        Document query = new Document("Protein names", new Document("$regex", regex));
+        Document query = new Document("fr.lesbg.Protein names", new Document("$regex", regex));
         collection.find(query).forEach(doc -> {
             Document temp = (Document) doc;
             results.add(gson.fromJson(temp.toJson(), ProteinData.class));

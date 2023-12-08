@@ -1,4 +1,4 @@
-package Protein;
+package fr.lesbg.Protein;
 
 import com.google.gson.annotations.SerializedName;
 import lombok.Getter;
@@ -16,7 +16,7 @@ public class ProteinData {
     private String entry;
     @SerializedName("Entry Name")
     private String entryName;
-    @SerializedName("Protein names")
+    @SerializedName("fr.lesbg.Protein names")
     private String proteinNames;
     @SerializedName("InterPro")
     private String interPro;

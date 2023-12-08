@@ -1,4 +1,4 @@
-package gui;
+package fr.lesbg.gui;
 
 import javafx.application.Application;
 import javafx.geometry.Insets;
