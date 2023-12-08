@@ -3,6 +3,7 @@ import {NodeModel} from "./model/node.model";
 import {LinkModel} from "./model/link.model";
 import {ProteinModel} from "./model/protein.model";
 import {ProteinService} from "./services/protein.service";
+import {FormGroup} from "@angular/forms";
 
 @Component({
   selector: 'app-root',
@@ -17,6 +18,8 @@ export class AppComponent {
   dataSourceProtein: ProteinModel = ProteinModel.EMPTY_PROTEIN;
   dataSourceNeighbours: ProteinModel[] = [];
   dataSourceNeighboursOfNeighbours: Map<ProteinModel, ProteinModel[]> = new Map<ProteinModel, ProteinModel[]>();
+  options: string[] = ["Entry","EntryName","ProteinNames"];
+  selectedOption: string = "";
 
   constructor(private proteinService: ProteinService) {
     this.nodes.push(new NodeModel("n1", "Node 1"));
@@ -31,6 +34,8 @@ export class AppComponent {
     this.links.push(new LinkModel("l4", "n2", "n4", "Link 4"));
     this.links.push(new LinkModel("l5", "n3", "n4", "Link 5"));
     this.links.push(new LinkModel("l6", "n3", "n5", "Link 6"));
+    this.links.push(new LinkModel("l7", "n5", "n1", "Link 7"));
+
   }
 
   public updateInput($event: KeyboardEvent) {
@@ -71,5 +76,27 @@ export class AppComponent {
     this.proteinService.getNeighborsAndNeigborsofNeighborsFromEntry(this.dataSourceProtein.entry).subscribe(data => {
       this.dataSourceNeighboursOfNeighbours = data;
     });
+  }
+
+  public display(node: NodeModel ) {
+    console.log(node.id);
+    console.log(node.label);
+  }
+
+  public search() {
+    switch (this.selectedOption) {
+      case "Entry":
+        this.reloadWithEntry();
+        break;
+      case "EntryName": {
+        this.reloadWithEntryName();
+        break;
+      }
+      case "ProteinNames": {
+        this.reloadWithProteinNames()
+      }
+    }
+
+    console.log(this.selectedOption);
   }
 }

@@ -1,0 +1,10 @@
+.toolbar {
+  display: flex;
+  justify-content: center;
+  height: 50px;
+}
+
+.form_body {
+  display: flex;
+  flex-direction: column;
+}
