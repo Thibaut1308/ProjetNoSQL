@@ -17,7 +17,6 @@ export class AppComponent {
   inputValue: string = '';
   dataSourceProtein: ProteinModel = ProteinModel.EMPTY_PROTEIN;
   dataSourceNeighbours: ProteinModel[] = [];
-  dataSourceNeighboursOfNeighbours: Map<ProteinModel, ProteinModel[]> = new Map<ProteinModel, ProteinModel[]>();
   options: string[] = ["Entry","EntryName","ProteinNames"];
   selectedOption: string = "";
   dataSourceNeighboursOfNeighbours: ProteinlinksModel[] = [];
