@@ -1,69 +1,86 @@
-<mat-toolbar class="toolbar">
+<mat-toolbar color="primary" class="toolbar">
   <h1>
     Parceque c'est notre projet !!!!!!!!
   </h1>
 </mat-toolbar>
 <mat-tab-group>
   <mat-tab label="Neo4J">
-    <ngx-graph
-      class="chart-container"
-      [links]="links"
-      [nodes]="nodes"
-      layout="dagreCluster"
-      style="width: 100%">
-      <ng-template #nodeTemplate let-nodes>
-        <svg:g
-          (click)="display(nodes)"
-          class="node"
-          ngx-tooltip
+    <div class="neo4j_container">
+      <ngx-graph
+        class="chart-container"
+        [links]="links"
+        [nodes]="nodes"
+        [minZoomLevel]="0.5"
+        [maxZoomLevel]="2">
+        <ng-template #nodeTemplate let-nodes>
+          <svg:g
+            (click)="display(nodes)"
+            class="node"
+            ngx-tooltip
+          >
+            <svg:rect
+              [attr.width]="nodes.dimension.width"
+              [attr.height]="nodes.dimension.height"
+              [attr.fill]="nodes.data.color"
+            />
+            <svg:text alignment-baseline="central" [attr.x]="10" [attr.y]="nodes.dimension.height / 2">
+              {{nodes.label}}
+            </svg:text>
+          </svg:g>
+        </ng-template>
+        <ng-template #linkTemplate let-links>
+          <svg:g class="edge">
+            <svg:path class="line" stroke-width="2" marker-end="url(#arrow)"></svg:path>
+            <svg:text class="edge-label" text-anchor="middle">
+              <textPath
+                class="text-path"
+                [attr.href]="'#' + links.id"
+                [style.dominant-baseline]="links.dominantBaseline"
+                startOffset="50%"
+              >
+                {{links.source}} vers {{links.target}}
+              </textPath>
+            </svg:text>
+          </svg:g>
+        </ng-template>
         >
-          <svg:rect
-            [attr.width]="nodes.dimension.width"
-            [attr.height]="nodes.dimension.height"
-            [attr.fill]="nodes.data.color"
-          />
-          <svg:text alignment-baseline="central" [attr.x]="10" [attr.y]="nodes.dimension.height / 2">
-            {{nodes.label}}
-          </svg:text>
-        </svg:g>
-      </ng-template>
-      <ng-template #linkTemplate let-links>
-        <svg:g class="edge">
-          <svg:path class="line" stroke-width="2" marker-end="url(#arrow)"></svg:path>
-          <svg:text class="edge-label" text-anchor="middle">
-            <textPath
-              class="text-path"
-              [attr.href]="'#' + links.id"
-              [style.dominant-baseline]="links.dominantBaseline"
-              startOffset="50%"
-            >
-              {{links.source}} vers {{links.target}}
-            </textPath>
-          </svg:text>
-        </svg:g>
-      </ng-template>
-      ></ngx-graph>
-    <form class="form_body">
-      <mat-form-field>
-      <input matInput placeholder="Entrez les informations de la protéine" (keyup)="updateInput($event)"/>
-      </mat-form-field>
-      <mat-form-field>
-        <mat-select placeholder="Critère" [(ngModel)]="selectedOption">
-          <mat-option *ngFor="let option of options" [value]="option">
-            {{option}}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-        <label>Niveaux de recherche : </label>
-        <mat-radio-group>
-          <mat-radio-button value="auto">sur 1 niveau</mat-radio-button>
-          <mat-radio-button value="always">sur 2 niveaux</mat-radio-button>
+      </ngx-graph>
+
+      <form class="form_body">
+        <mat-form-field>
+          <mat-label>
+            Informations de la protéine
+          </mat-label>
+          <input matInput (keyup)="updateInput($event)"/>
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>
+            Critère
+          </mat-label>
+          <mat-select  [(ngModel)]="selectedOption">
+            <mat-option *ngFor="let option of options" [value]="option">
+              {{option}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <label>Niveau de recherche : </label>
+        <mat-radio-group class="radio_group">
+          <mat-radio-button value="auto">sur 1 voisinage</mat-radio-button>
+          <mat-radio-button value="always">sur 2 voisinages</mat-radio-button>
         </mat-radio-group>
-      <button *ngIf="dataSourceProtein !== ProteinModel.EMPTY_PROTEIN" (click)="getNeighbors()">Afficher les voisins de la protéine</button>
-      <button *ngIf="dataSourceProtein !== ProteinModel.EMPTY_PROTEIN" (click)="getNeighborsAndNeighborsOfNeighbors()">Afficher les voisins du premier et second degré de la protéine</button>
-      <button (click)="search()" mat-button color="primary">Rechercher</button>
-    </form>
+        <button *ngIf="dataSourceProtein !== ProteinModel.EMPTY_PROTEIN" (click)="getNeighbors()">Afficher les voisins de la protéine</button>
+        <button *ngIf="dataSourceProtein !== ProteinModel.EMPTY_PROTEIN" (click)="getNeighborsAndNeighborsOfNeighbors()">Afficher les voisins du premier et second degré de la protéine</button>
+        <button (click)="search()" mat-stroked-button color="primary">Rechercher</button>
+      </form>
+    </div>
+
   </mat-tab>
-  <mat-tab label="MongoDB">Content 2</mat-tab>
+  <mat-tab class="dashboard_tab" label="MongoDB">
+    <mat-card>
+      <mat-card-content>Simple card</mat-card-content>
+    </mat-card>
+  </mat-tab>
 </mat-tab-group>
 
