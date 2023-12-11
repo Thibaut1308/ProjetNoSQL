@@ -58,7 +58,7 @@
           <mat-label>
             Critère
           </mat-label>
-          <mat-select  [(ngModel)]="selectedOption">
+          <mat-select  [ngModel]="selectedOption" [(value)]="selectedOption">
             <mat-option *ngFor="let option of options" [value]="option">
               {{option}}
             </mat-option>
@@ -70,8 +70,6 @@
           <mat-radio-button value="auto">sur 1 voisinage</mat-radio-button>
           <mat-radio-button value="always">sur 2 voisinages</mat-radio-button>
         </mat-radio-group>
-        <button *ngIf="dataSourceProtein !== ProteinModel.EMPTY_PROTEIN" (click)="getNeighbors()">Afficher les voisins de la protéine</button>
-        <button *ngIf="dataSourceProtein !== ProteinModel.EMPTY_PROTEIN" (click)="getNeighborsAndNeighborsOfNeighbors()">Afficher les voisins du premier et second degré de la protéine</button>
         <button (click)="search()" mat-stroked-button color="primary">Rechercher</button>
       </form>
     </div>

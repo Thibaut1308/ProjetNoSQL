@@ -18,7 +18,7 @@ export class AppComponent {
   dataSourceProtein: ProteinModel = ProteinModel.EMPTY_PROTEIN;
   dataSourceNeighbours: ProteinModel[] = [];
   options: string[] = ["Entry","EntryName","ProteinNames"];
-  selectedOption: string = "";
+  selectedOption: string ="";
   dataSourceNeighboursOfNeighbours: ProteinlinksModel[] = [];
 
   constructor(private proteinService: ProteinService) {
