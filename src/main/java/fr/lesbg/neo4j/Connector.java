@@ -73,6 +73,8 @@ public class Connector {
                     Value source = record.get("source");
                     Value neighbor = record.get("neighbor");
                     Value neighborNeighbor = record.get("neighborNeighbor");
+                    Value jaccardNeighbor = record.get("r").get("jaccard");
+                    Value jaccardNeighborNeighbor = record.get("r2").get("jaccard2");
 
                     ProteinData sourceProtein = buildProteinData(proteinDataBuilder, source);
 
@@ -83,7 +85,9 @@ public class Connector {
                     ProteinLinksBuilder proteinLinksBuilder = new ProteinLinksBuilder();
                     proteinLinksBuilder.setSource(sourceProtein)
                             .setNeighbor(neighborProtein)
-                            .setNeighborOfNeighbor(neighborNeighborProtein);
+                            .setNeighborOfNeighbor(neighborNeighborProtein)
+                            .setJaccardSourceNeighbor((double)Math.round(Float.parseFloat(jaccardNeighbor.toString())*100)/100 + "")
+                            .setJaccardNeighborNeighborOfNeighbor((double)Math.round(Float.parseFloat(jaccardNeighborNeighbor.toString())*100)/100 + "");
                     proteinLinks.add(proteinLinksBuilder.createProteinLinks());
                 }
                 return proteinLinks;

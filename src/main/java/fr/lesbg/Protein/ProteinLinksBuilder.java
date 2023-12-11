@@ -5,6 +5,8 @@ public class ProteinLinksBuilder {
         private ProteinData source;
         private ProteinData neighbor;
         private ProteinData neighborOfNeighbor;
+        private String jaccardSourceNeighbor;
+        private String jaccardNeighborNeighborOfNeighbor;
 
         public ProteinLinksBuilder setSource(ProteinData source) {
             this.source = source;
@@ -21,7 +23,17 @@ public class ProteinLinksBuilder {
             return this;
         }
 
+        public ProteinLinksBuilder setJaccardSourceNeighbor(String jaccardSourceNeighbor) {
+            this.jaccardSourceNeighbor = jaccardSourceNeighbor;
+            return this;
+        }
+
+        public ProteinLinksBuilder setJaccardNeighborNeighborOfNeighbor(String jaccardNeighborNeighborOfNeighbor) {
+            this.jaccardNeighborNeighborOfNeighbor = jaccardNeighborNeighborOfNeighbor;
+            return this;
+        }
+
         public ProteinLinks createProteinLinks() {
-            return new ProteinLinks(source, neighbor, neighborOfNeighbor);
+            return new ProteinLinks(source, neighbor, neighborOfNeighbor, jaccardSourceNeighbor, jaccardNeighborNeighborOfNeighbor);
         }
 }
