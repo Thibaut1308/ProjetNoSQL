@@ -9,6 +9,7 @@ import {ProteinlinksModel} from "../model/proteinlinks.model";
 })
 export class ProteinService {
   private domain: string = "http://localhost:8080/protein";
+  private mongoDomain: string = "http://localhost:8080/mongodb"
   private http: HttpClient;
 
   constructor(http: HttpClient) {
@@ -41,6 +42,18 @@ export class ProteinService {
 
   public getNeighborsAndNeigborsofNeighborsFromEntry(entry: string): Observable<ProteinlinksModel[]>  {
     return this.http.get<ProteinlinksModel[]>(this.domain + "/neighboursAndNeighboursOfNeighbours/" + entry, {
+      headers: new HttpHeaders().set('Content-Type', 'application/json')
+    });
+  }
+
+  public getProteinByEntryId(id: string):Observable<ProteinModel> {
+    return this.http.get<ProteinModel>(this.domain + "/entry/" + id,{
+      headers: new HttpHeaders().set('Content-Type', 'application/json')
+    });
+  }
+
+  public getProteinByGO(go: string): Observable<ProteinModel[]> {
+    return this.http.get<ProteinModel[]>(this.mongoDomain + "/go/" + go,{
       headers: new HttpHeaders().set('Content-Type', 'application/json')
     });
   }

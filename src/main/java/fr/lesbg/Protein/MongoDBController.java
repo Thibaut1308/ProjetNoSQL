@@ -15,22 +15,22 @@ public class MongoDBController {
     private final MongoDBDao mongoDBDao = MongoDBDao.getInstance();
 
     @RequestMapping("/entry/{entryId}")
-    public ProteinData getProteinFromEntryId(@PathVariable String entryId) {
+    public ProteinData getProteinFromEntryId(@PathVariable("entryId")String entryId) {
         return mongoDBDao.getProteinByEntryId(entryId);
     }
 
     @RequestMapping("/entryName/{entryName}")
-    public ProteinData getProteinFromEntryName(@PathVariable String entryName) {
+    public ProteinData getProteinFromEntryName(@PathVariable("entryName") String entryName) {
         return mongoDBDao.getProteinByEntryName(entryName);
     }
 
     @RequestMapping("/description/{description}")
-    public List<ProteinData> getProteinsFromDescription(@PathVariable String description) {
+    public List<ProteinData> getProteinsFromDescription(@PathVariable("description") String description) {
         return mongoDBDao.getProteinByEC(description);
     }
 
-    @RequestMapping("/go/{go}")
-    public List<ProteinData> getProteinsFromGo(@PathVariable String go) {
+    @RequestMapping("/go/{goDesc}")
+    public List<ProteinData> getProteinsFromGo(@PathVariable("goDesc") String go) {
         return mongoDBDao.getProteinByGO(go);
     }
 

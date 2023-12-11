@@ -15,6 +15,7 @@ import {MatSelectModule} from "@angular/material/select";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MatRadioModule} from "@angular/material/radio";
 import {MatCardModule} from '@angular/material/card';
+import {MatTableModule} from "@angular/material/table";
 
 @NgModule({
   declarations: [
@@ -35,7 +36,8 @@ import {MatCardModule} from '@angular/material/card';
     FormsModule,
     MatRadioModule,
     ReactiveFormsModule,
-    MatCardModule
+    MatCardModule,
+    MatTableModule
   ],
   providers: [],
   bootstrap: [AppComponent]
