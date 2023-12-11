@@ -213,7 +213,25 @@ public class Connector {
         }
     }
 
+    public void deleteRedundantLinks() {
+        try (Session session = driver.session()) {
+            session.executeWrite(tx -> {
+                tx.run(
+                        """
+                            MATCH (a:Protein)-[r:SHARES_DOMAIN_WITH]->(b:Protein)
+                            WHERE id(a) < id(b) // Pour éviter de traiter deux fois la même paire
+                            WITH a, b, COLLECT(r) AS rels
+                            FOREACH (rel IN rels | DELETE rel);
+                        """
+                );
+                return null;
+            });
+        }
+    }
+
     public List<ProteinLinks> getNeighborsAndNeigborsofNeighborsFromProtein(ProteinData protein) {
-        return this.createLinksReturnProteinNeighborsAndNeighborsOfNeighbors(protein.getEntry()); // Create links between proteins if they share a domain
+        List<ProteinLinks> pl = this.createLinksReturnProteinNeighborsAndNeighborsOfNeighbors(protein.getEntry()); // Create links between proteins if they share a domain
+        this.deleteRedundantLinks();
+        return pl;
     }
 }

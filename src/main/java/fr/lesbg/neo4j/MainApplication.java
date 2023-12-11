@@ -17,6 +17,7 @@ public class MainApplication {
         for (ProteinLinks proteinLinks : proteinDataList2) {
             System.out.println(proteinLinks);
         }
+        System.out.println(proteinDataList2.size());
 
         connectorNeo4j.close();
     }
