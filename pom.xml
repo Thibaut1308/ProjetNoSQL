@@ -38,17 +38,6 @@
             <artifactId>neo4j-java-driver</artifactId>
             <version>5.15.0</version>
         </dependency>
-        <!-- JavaFX -->
-        <dependency>
-            <groupId>org.openjfx</groupId>
-            <artifactId>javafx-controls</artifactId>
-            <version>17</version>
-        </dependency>
-        <dependency>
-            <groupId>org.openjfx</groupId>
-            <artifactId>javafx-graphics</artifactId>
-            <version>17</version>
-        </dependency>
         <!-- fr.lesbg.MongoDB Java Driver - Asynchronous -->
         <dependency>
             <groupId>org.mongodb</groupId>

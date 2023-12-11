@@ -1,6 +1,6 @@
 <mat-toolbar color="primary" class="toolbar">
   <h1>
-    Parceque c'est notre projet !!!!!!!!
+    Parce que c'est notre projet !!!!!!!! - Macron
   </h1>
 </mat-toolbar>
 <mat-tab-group>
@@ -9,8 +9,10 @@
     <div class="neo4j_container">
       <ngx-graph
         class="chart-container"
+        [layout]="colaForceDirectedLayout"
         [links]="links"
         [nodes]="nodes"
+        [update$]="update$"
         [minZoomLevel]="0.5"
         [maxZoomLevel]="2">
         <ng-template #nodeTemplate let-nodes>
@@ -39,7 +41,7 @@
                 [style.dominant-baseline]="links.dominantBaseline"
                 startOffset="50%"
               >
-                {{links.source}} vers {{links.target}}
+                {{links.label}}
               </textPath>
             </svg:text>
           </svg:g>
@@ -65,12 +67,6 @@
             </mat-option>
           </mat-select>
         </mat-form-field>
-
-        <label>Niveau de recherche : </label>
-        <mat-radio-group class="radio_group">
-          <mat-radio-button value="auto">sur 1 voisinage</mat-radio-button>
-          <mat-radio-button value="always">sur 2 voisinages</mat-radio-button>
-        </mat-radio-group>
         <button (click)="search()" mat-stroked-button color="primary">Rechercher</button>
       </form>
     </div>

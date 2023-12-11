@@ -1,7 +1,7 @@
-package fr.lesbg.neo4j;
+package fr.nosql.neo4j;
 
-import fr.lesbg.Protein.ProteinData;
-import fr.lesbg.Protein.ProteinLinks;
+import fr.nosql.protein.ProteinData;
+import fr.nosql.protein.ProteinLinks;
 
 import java.util.List;
 

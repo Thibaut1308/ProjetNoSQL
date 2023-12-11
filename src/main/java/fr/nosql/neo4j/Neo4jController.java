@@ -1,6 +1,7 @@
-package fr.lesbg.Protein;
+package fr.nosql.neo4j;
 
-import fr.lesbg.neo4j.Connector;
+import fr.nosql.protein.ProteinData;
+import fr.nosql.protein.ProteinLinks;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,19 +21,13 @@ public class Neo4jController {
     }
 
     @GetMapping("/entryName/{entryName}")
-    public ProteinData getProteinFromEntryName(@PathVariable String entryName) {
+    public ProteinData getProteinFromEntryName(@PathVariable("entryName") String entryName) {
         return connector.getProteinFromName(entryName);
     }
 
     @GetMapping("/description/{description}")
-    public ProteinData getProteinFromDescription(@PathVariable String description) {
+    public ProteinData getProteinFromDescription(@PathVariable("description") String description) {
         return connector.getProteinFromDescription(description);
-    }
-
-    @GetMapping("/neighbours/{entry}")
-    public List<ProteinData> getProteinNeighbours(@PathVariable String entry) {
-        ProteinData proteinData = connector.getProteinFromEntry(entry);
-        return connector.getNeighborsFromProtein(proteinData);
     }
 
     @GetMapping("/neighboursAndNeighboursOfNeighbours/{entry}")

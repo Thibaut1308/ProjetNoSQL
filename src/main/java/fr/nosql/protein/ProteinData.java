@@ -1,4 +1,4 @@
-package fr.lesbg.Protein;
+package fr.nosql.protein;
 
 import com.google.gson.annotations.SerializedName;
 import lombok.Getter;

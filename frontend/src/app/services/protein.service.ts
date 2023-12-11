@@ -8,12 +8,10 @@ import {ProteinlinksModel} from "../model/proteinlinks.model";
   providedIn: 'root'
 })
 export class ProteinService {
-  private domain: string = "http://localhost:8080/protein";
+  private domain: string = "http://localhost:8080/neo4j";
   private mongoDomain: string = "http://localhost:8080/mongodb"
-  private http: HttpClient;
 
-  constructor(http: HttpClient) {
-    this.http = http;
+  constructor(private http: HttpClient) {
   }
 
   public getProteinFromEntry(entry: string): Observable<ProteinModel>  {
@@ -30,12 +28,6 @@ export class ProteinService {
 
   public getProteinFromDescription(description: string): Observable<ProteinModel>  {
     return this.http.get<ProteinModel>(this.domain + "/description/" + description, {
-      headers: new HttpHeaders().set('Content-Type', 'application/json')
-    });
-  }
-
-  public getNeighboursFromEntry(entry: string): Observable<ProteinModel[]>  {
-    return this.http.get<ProteinModel[]>(this.domain + "/neighbours/" + entry, {
       headers: new HttpHeaders().set('Content-Type', 'application/json')
     });
   }
