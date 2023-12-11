@@ -39,7 +39,7 @@ export class ProteinService {
   }
 
   public getProteinByEntryId(id: string):Observable<ProteinModel> {
-    return this.http.get<ProteinModel>(this.domain + "/entry/" + id,{
+    return this.http.get<ProteinModel>(this.mongoDomain + "/entry/" + id,{
       headers: new HttpHeaders().set('Content-Type', 'application/json')
     });
   }

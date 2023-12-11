@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {AfterViewInit, Component, ViewChild} from '@angular/core';
 import {NodeModel} from "./model/node.model";
 import {LinkModel} from "./model/link.model";
 import {ProteinModel} from "./model/protein.model";
@@ -6,6 +6,7 @@ import {ProteinService} from "./services/protein.service";
 import {ProteinlinksModel} from "./model/proteinlinks.model";
 import {Subject} from "rxjs";
 import {ColaForceDirectedLayout} from "@swimlane/ngx-graph";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
   selector: 'app-root',
@@ -16,27 +17,25 @@ export class AppComponent {
   nodes: NodeModel[] = [];
   links: LinkModel[] = [];
   inputValue: string = '';
-
   inputValueMongoDB: string = '';
   dataSourceProtein: ProteinModel = ProteinModel.EMPTY_PROTEIN;
   dataSourceNeighbours: ProteinModel[] = [];
   options: string[] = ["Entry","EntryName","ProteinNames"];
   selectedOption: string = "";
-
   dataSourceProteins: ProteinModel[] = [];
   nodeNeighbour: NodeModel[] = [];
   linkNeighbour: LinkModel[] = [];
-
   update$: Subject<any> = new Subject();
   colaForceDirectedLayout: ColaForceDirectedLayout = new ColaForceDirectedLayout();
   optionForMongo: string[] = ["Entry","EntryName","Protein Names","InterPro", "Sequence", "EC Number", "Gene Ontology"];
   dataSourceNeighboursOfNeighbours: ProteinlinksModel[] = [];
   selectedOptionMongoDB: string= "";
-  displayedColumns: string[] = ['position', 'name', 'weight', 'symbol'];
   displayedColumn: string[] = ['entry', 'entryName', 'proteinNames','interPro','sequence','ecNumber','geneOntology']
   proteinList: ProteinModel[] = [];
+  searching: boolean = false;
 
-  constructor(private proteinService: ProteinService) {
+  constructor(private proteinService: ProteinService,
+              private _snackBar: MatSnackBar) {
   }
 
   public updateInput($event: KeyboardEvent) {
@@ -179,58 +178,105 @@ export class AppComponent {
 
   public getProteinByEntryId() {
     this.proteinList = [];
+    let temp: ProteinModel[] = [];
+    this.searching = true;
     this.proteinService.getProteinByEntryId(this.inputValueMongoDB).subscribe(data => {
       console.log(data);
-      this.proteinList.push(data);
-      this.proteinList.push(data);
+      temp.push(data);
+      this.proteinList = temp;
+      this.searching = false;
+    },error => {
+      this.displayErrorSnackbar()
+      this.searching = false;
     });
   }
 
   public getProteinByGO() {
     this.proteinList = [];
+    this.searching = true;
     this.proteinService.getProteinByGO(this.inputValueMongoDB).subscribe(data => {
       console.log(data);
       this.proteinList = data;
+      this.searching = false;
+    },error => {
+      this.displayErrorSnackbar()
+      this.searching = false;
     })
   }
 
   public getProteinBySequence() {
     this.proteinList = [];
+    this.searching = true;
     this.proteinService.getProteinBySequence(this.inputValueMongoDB).subscribe(data => {
       console.log(data);
       this.proteinList = data;
+      this.searching = false;
+    },error => {
+      this.displayErrorSnackbar()
+      this.searching = false;
     })
   }
 
   public getProteinByEntryName() {
     this.proteinList = [];
+    let temp: ProteinModel[] = [];
+    this.searching = true;
     this.proteinService.getProteinByEntryName(this.inputValueMongoDB).subscribe(data => {
       console.log(data);
-      this.proteinList.push(data);
+      temp.push(data);
+      this.proteinList = temp;
+      this.searching = false;
+    },error => {
+      this.displayErrorSnackbar()
+      this.searching = false;
     })
   }
 
   public getProteinByDescription() {
     this.proteinList = [];
+    this.searching = true;
     this.proteinService.getProteinByDescription(this.inputValueMongoDB).subscribe(data => {
       console.log(data);
       this.proteinList = data;
+      this.searching = false;
+    },error => {
+      this.displayErrorSnackbar()
+      this.searching = false;
     })
   }
 
   public getProteinByInterPro() {
     this.proteinList = [];
+    this.searching = true;
     this.proteinService.getProteinByInterPro(this.inputValueMongoDB).subscribe(data => {
       console.log(data);
       this.proteinList = data;
+      this.searching = false;
+    },error => {
+      this.displayErrorSnackbar()
+      this.searching = false;
     })
   }
 
   public getProteinByProteinNames() {
     this.proteinList = [];
+    this.searching = true;
     this.proteinService.getProteinByProteinNames(this.inputValueMongoDB).subscribe(data => {
       console.log(data);
       this.proteinList = data;
+      this.searching = false;
+    },error => {
+      this.displayErrorSnackbar()
+      this.searching = false;
     })
+  }
+
+  async copyToClipboard(value: string) {
+    await navigator.clipboard.writeText(value);
+    this._snackBar.open("天哪，太美了！","Fermer",{duration:1000})
+  }
+
+  displayErrorSnackbar() {
+    this._snackBar.open("没有蛋白质，你是傻子吗？","Oui !",{duration:5000})
   }
 }

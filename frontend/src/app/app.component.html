@@ -52,7 +52,7 @@
       <form class="form_body">
         <mat-form-field>
           <mat-label>
-            Informations de la protéine
+            Recherche
           </mat-label>
           <input matInput (keyup)="updateInput($event)"/>
         </mat-form-field>
@@ -78,7 +78,7 @@
       <form class="mongodb_search">
         <mat-form-field class="mongoDB_formfield">
           <mat-label>
-            Informations de la protéine
+            Recherche
           </mat-label>
           <input matInput (keyup)="updateInputMongoDB($event)">
         </mat-form-field>
@@ -101,43 +101,44 @@
 
         <ng-container matColumnDef="entry">
           <th mat-header-cell *matHeaderCellDef> Entry </th>
-          <td mat-cell class="truncate-cell" *matCellDef="let element"> {{element.entry}} </td>
+          <td mat-cell class="truncate-cell" *matCellDef="let element"><label class="copy_label" (click)="copyToClipboard(element.entry)" [matTooltip]="element.entry"> {{element.entry}}</label> </td>
         </ng-container>
 
         <ng-container matColumnDef="entryName">
           <th mat-header-cell *matHeaderCellDef> Entry Name </th>
-          <td mat-cell class="truncate-cell"  *matCellDef="let element"> {{element.entryName}} </td>
+          <td mat-cell class="truncate-cell"  *matCellDef="let element"><label class="copy_label" (click)="copyToClipboard(element.entryName)" [matTooltip]="element.entryName"> {{element.entryName}} </label></td>
         </ng-container>
 
         <ng-container matColumnDef="proteinNames">
           <th mat-header-cell *matHeaderCellDef> Protein Name </th>
-          <td mat-cell class="truncate-cell"  *matCellDef="let element"> {{element.proteinNames}} </td>
+          <td mat-cell class="truncate-cell"  *matCellDef="let element"><label class="copy_label" (click)="copyToClipboard(element.proteinNames)" [matTooltip]="element.proteinNames"> {{element.proteinNames}}</label> </td>
         </ng-container>
 
         <ng-container matColumnDef="interPro">
           <th mat-header-cell *matHeaderCellDef> InterPro </th>
-          <td mat-cell class="truncate-cell"  *matCellDef="let element"> {{element.interPro}} </td>
+          <td mat-cell class="truncate-cell"  *matCellDef="let element"><label class="copy_label" (click)="copyToClipboard(element.interPro)" [matTooltip]="element.interPro"> {{element.interPro}} </label></td>
         </ng-container>
 
         <ng-container matColumnDef="sequence">
           <th mat-header-cell *matHeaderCellDef> Sequence </th>
-          <td mat-cell class="truncate-cell"  *matCellDef="let element"> {{element.sequence}} </td>
+          <td mat-cell class="truncate-cell"  *matCellDef="let element"><label class="copy_label" (click)="copyToClipboard(element.sequence)" [matTooltip]="element.sequence"> {{element.sequence}} </label></td>
         </ng-container>
 
         <ng-container matColumnDef="ecNumber">
           <th mat-header-cell *matHeaderCellDef> EC Number </th>
-          <td mat-cell class="truncate-cell"  *matCellDef="let element"> {{element.ecNumber}} </td>
+          <td mat-cell class="truncate-cell"  *matCellDef="let element"><label class="copy_label" (click)="copyToClipboard(element.ecNumber)" [matTooltip]="element.ecNumber"> {{element.ecNumber}} </label></td>
         </ng-container>
 
         <ng-container matColumnDef="geneOntology">
           <th mat-header-cell *matHeaderCellDef> Gene Ontology </th>
-          <td mat-cell class="truncate-cell"  *matCellDef="let element"> {{element.geneOntology}} </td>
+          <td mat-cell class="truncate-cell"  *matCellDef="let element"><label class="copy_label" (click)="copyToClipboard(element.geneOntology)" [matTooltip]="element.geneOntology"> {{element.geneOntology}} </label></td>
         </ng-container>
 
         <tr mat-header-row *matHeaderRowDef="displayedColumn"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumn;"></tr>
       </table>
     </div>
+    <mat-progress-bar *ngIf="searching" mode="indeterminate"></mat-progress-bar>
   </mat-tab>
 </mat-tab-group>
 

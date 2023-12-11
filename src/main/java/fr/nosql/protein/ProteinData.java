@@ -13,7 +13,7 @@ public class ProteinData {
     private String entry;
     @SerializedName("Entry Name")
     private String entryName;
-    @SerializedName("fr.lesbg.Protein names")
+    @SerializedName("Protein names")
     private String proteinNames;
     @SerializedName("InterPro")
     private String interPro;
