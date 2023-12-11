@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/protein")
-public class ProteinController {
+@RequestMapping("/neo4j")
+public class Neo4jController {
 
     private final Connector connector = Connector.getInstance();
 
