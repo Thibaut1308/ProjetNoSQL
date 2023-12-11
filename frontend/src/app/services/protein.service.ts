@@ -49,4 +49,35 @@ export class ProteinService {
       headers: new HttpHeaders().set('Content-Type', 'application/json')
     });
   }
+
+  public getProteinByEntryName(entrName: string): Observable<ProteinModel> {
+    return this.http.get<ProteinModel>(this.mongoDomain + "/entryName/" + entrName,{
+      headers: new HttpHeaders().set('Content-Type', 'application/json')
+    });
+  }
+
+  public getProteinBySequence(sequence: string): Observable<ProteinModel[]> {
+    return this.http.get<ProteinModel[]>(this.mongoDomain + "/sequence/" + sequence,{
+      headers: new HttpHeaders().set('Content-Type', 'application/json')
+    });
+  }
+
+  public getProteinByInterPro(interpro: string): Observable<ProteinModel[]> {
+    return this.http.get<ProteinModel[]>(this.mongoDomain + "/interpro/" + interpro,{
+      headers: new HttpHeaders().set('Content-Type', 'application/json')
+    });
+  }
+
+  public getProteinByDescription(description: string): Observable<ProteinModel[]> {
+    return this.http.get<ProteinModel[]>(this.mongoDomain + "/description/" + description,{
+      headers: new HttpHeaders().set('Content-Type', 'application/json')
+    });
+  }
+
+  public getProteinByProteinNames(proteinNames: string): Observable<ProteinModel[]> {
+    return this.http.get<ProteinModel[]>(this.mongoDomain + "/proteinNames/" + proteinNames,{
+      headers: new HttpHeaders().set('Content-Type', 'application/json')
+    });
+  }
+
 }
