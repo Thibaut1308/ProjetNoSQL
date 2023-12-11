@@ -1,4 +1,4 @@
-package fr.lesbg.Protein;
+package fr.nosql.protein;
 
 public class ProteinDataBuilder {
 

@@ -1,6 +1,6 @@
-package fr.lesbg.MongoDB;
+package fr.nosql.mongodb;
 
-import fr.lesbg.Protein.ProteinData;
+import fr.nosql.protein.ProteinData;
 import com.google.gson.Gson;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;

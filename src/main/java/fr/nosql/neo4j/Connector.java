@@ -1,9 +1,9 @@
-package fr.lesbg.neo4j;
+package fr.nosql.neo4j;
 
-import fr.lesbg.Protein.ProteinData;
-import fr.lesbg.Protein.ProteinDataBuilder;
-import fr.lesbg.Protein.ProteinLinks;
-import fr.lesbg.Protein.ProteinLinksBuilder;
+import fr.nosql.protein.ProteinData;
+import fr.nosql.protein.ProteinDataBuilder;
+import fr.nosql.protein.ProteinLinks;
+import fr.nosql.protein.ProteinLinksBuilder;
 import org.neo4j.driver.*;
 import org.neo4j.driver.Record;
 

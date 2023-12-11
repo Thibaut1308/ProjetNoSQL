@@ -1,6 +1,6 @@
-package fr.lesbg.Protein;
+package fr.nosql.mongodb;
 
-import fr.lesbg.MongoDB.MongoDBDao;
+import fr.nosql.protein.ProteinData;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;

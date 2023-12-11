@@ -1,6 +1,7 @@
-package fr.lesbg.Protein;
+package fr.nosql.neo4j;
 
-import fr.lesbg.neo4j.Connector;
+import fr.nosql.protein.ProteinData;
+import fr.nosql.protein.ProteinLinks;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
