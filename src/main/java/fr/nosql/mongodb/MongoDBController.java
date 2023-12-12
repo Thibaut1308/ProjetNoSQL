@@ -48,4 +48,14 @@ public class MongoDBController {
     public List<ProteinData> getProteinByNames(@PathVariable("proteinNames") String proteinNames) {
         return mongoDBDao.getProteinByName(proteinNames);
     }
+
+    @GetMapping("/countProtein")
+    public long countProtein() {
+        return mongoDBDao.countProteins();
+    }
+
+    @GetMapping("/undescribedProtein")
+    public List<ProteinData> getUndescribedProtein(){
+        return mongoDBDao.getUndescribedProtein();
+    }
 }

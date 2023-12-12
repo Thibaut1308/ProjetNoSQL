@@ -1,5 +1,6 @@
 package fr.nosql.mongodb;
 
+import com.mongodb.client.model.Filters;
 import fr.nosql.protein.ProteinData;
 import com.google.gson.Gson;
 import com.mongodb.client.MongoClient;
@@ -11,7 +12,11 @@ import lombok.Setter;
 import org.bson.Document;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+
+import static com.mongodb.client.model.Aggregates.count;
+import static com.mongodb.client.model.Aggregates.match;
 
 @Getter
 @Setter
@@ -114,6 +119,24 @@ public class MongoDBDao {
         String regex = ".*"+geneOntology+".*";
         Document query = new Document("Gene Ontology (GO)", new Document("$regex", regex));
         collection.find(query).forEach(doc -> {
+            Document temp = (Document) doc;
+            results.add(gson.fromJson(temp.toJson(), ProteinData.class));
+        });
+        return results;
+    }
+
+    public long countProteins() {
+        collection.aggregate(Arrays.asList(
+                match(Filters.eq("Entry", "A4D161")),
+                count())).first();
+
+        return collection.countDocuments();
+    }
+
+    public List<ProteinData> getUndescribedProtein() {
+        List<ProteinData> results = new ArrayList<>();
+        collection.aggregate(Arrays.asList(
+                match(Filters.and(Filters.eq("EC Number",null), Filters.eq("Gene Ontology (GO)", null))))).forEach(doc -> {
             Document temp = (Document) doc;
             results.add(gson.fromJson(temp.toJson(), ProteinData.class));
         });
