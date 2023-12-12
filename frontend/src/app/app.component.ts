@@ -267,11 +267,11 @@ export class AppComponent {
 
   async copyToClipboard(value: string) {
     await navigator.clipboard.writeText(value);
-    this._snackBar.open("天哪，太美了！","Fermer",{duration:1000})
+    this._snackBar.open("Copier dans le presse-papier","Fermer",{duration:1000})
   }
 
   displayErrorSnackbar() {
-    this._snackBar.open("没有蛋白质，你是傻子吗？","Oui !",{duration:5000})
+    this._snackBar.open("Protéine non trouvée？","Fermer",{duration:1000})
   }
 
   switchLayout($event: any) {
