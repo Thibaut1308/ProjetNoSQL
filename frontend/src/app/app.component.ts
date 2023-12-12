@@ -34,7 +34,13 @@ export class AppComponent {
   searching: boolean = false;
   displayedStatisticColumns: string[] = ['statistic', 'value'];
   proteinCount: number = 0;
-  undescribedProteinCount: number =0;
+  undescribedProteinCount: number = 0;
+  noInterProtein: number = 0;
+  compareProteinEntry1: string ="";
+  compareProteinEntry2: string ="";
+  compareProtein1: ProteinModel = new ProteinModel("","","","","","","");
+  compareProtein2: ProteinModel = new ProteinModel("","","","","","","");
+
 
   constructor(private proteinService: ProteinService,
               private _snackBar: MatSnackBar) {
@@ -173,6 +179,14 @@ export class AppComponent {
     this.inputValueMongoDB = ($event.target as HTMLInputElement).value;
   }
 
+  public updateCompare1($event: KeyboardEvent) {
+    this.compareProteinEntry1 = ($event.target as HTMLInputElement).value;
+  }
+
+  public updateCompare2($event: KeyboardEvent) {
+    this.compareProteinEntry2 = ($event.target as HTMLInputElement).value;
+  }
+
   public getProteinByEntryId() {
     this.proteinList = [];
     let temp: ProteinModel[] = [];
@@ -294,6 +308,22 @@ export class AppComponent {
   getUndescribedProteinCount() {
     this.proteinService.getUndescribedProteinCount().subscribe(data => {
       this.undescribedProteinCount = data.length;
+    })
+  }
+
+  getNoInterProteinCount() {
+    this.proteinService.getNoInterProteinCount().subscribe(data => {
+      this.noInterProtein = data.length;
+    })
+  }
+
+  computeSearchForComparison() {
+    this.proteinService.getProteinByEntryId(this.compareProteinEntry1).subscribe(data => {
+      this.compareProtein1 = data;
+    });
+    this.proteinService.getProteinByEntryId(this.compareProteinEntry2).subscribe(data => {
+      console.log(data);
+      this.compareProtein2 = data;
     })
   }
 }

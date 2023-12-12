@@ -92,4 +92,10 @@ export class ProteinService {
     });
   }
 
+  public getNoInterProteinCount(): Observable<ProteinModel[]> {
+    return this.http.get<ProteinModel[]>(this.mongoDomain + "/noInterProtein",{
+      headers: new HttpHeaders().set('Content-Type', 'application/json')
+    });
+  }
+
 }

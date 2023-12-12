@@ -9,6 +9,7 @@ export class ProteinModel {
   ecNumber: string;
   geneOntology: string;
 
+
   constructor(entry: string, entryName: string, proteinNames: string, interPro: string, sequence: string, ecNumber: string, geneOntology: string) {
     this.entry = entry;
     this.entryName = entryName;
@@ -18,6 +19,7 @@ export class ProteinModel {
     this.ecNumber = ecNumber;
     this.geneOntology = geneOntology;
   }
+
 
   public showInfos(): string {
     return "Entry: " + this.entry + "\n" +

@@ -181,6 +181,10 @@
               <label class="statistic_row_title">Protéines sans description :</label>
               <label class="statistic_row_value">{{undescribedProteinCount}}</label>
             </div>
+            <div class="statistic_row">
+              <label class="statistic_row_title">Protéines sans interpro :</label>
+              <label class="statistic_row_value">{{noInterProtein}}</label>
+            </div>
           </div>
         </mat-card-content>
       </mat-card>
@@ -193,23 +197,23 @@
               <div class="statistics-container">
                 <div class="compare_row">
                   <label class="compare_row_title">Identifiant protéine :</label>
-                  <label class="compare_row_value">{{proteinCount}}</label>
+                  <label class="compare_row_value truncate-stat" matTooltip="{{compareProtein1.entry}}">{{compareProtein1.entry}}</label>
                 </div>
                 <div class="compare_row">
                   <label class="compare_row_title">Nom scientifique :</label>
-                  <label class="compare_row_value">{{undescribedProteinCount}}</label>
+                  <label class="compare_row_value truncate-stat" matTooltip="{{compareProtein1.proteinNames}}">{{compareProtein1.proteinNames}}</label>
                 </div>
                 <div class="compare_row">
                   <label class="compare_row_title">InterPro :</label>
-                  <label class="compare_row_value">{{undescribedProteinCount}}</label>
+                  <label class="compare_row_value truncate-stat" matTooltip="{{compareProtein1.interPro}}">{{compareProtein1.interPro}}</label>
                 </div>
                 <div class="compare_row">
                   <label class="compare_row_title">Séquence :</label>
-                  <label class="compare_row_value">{{undescribedProteinCount}}</label>
+                  <label class="compare_row_value truncate-stat" matTooltip="{{compareProtein1.sequence}}">{{compareProtein1.sequence}}</label>
                 </div>
                 <div class="compare_row">
                   <label class="compare_row_title">Ontologie :</label>
-                  <label class="compare_row_value">{{undescribedProteinCount}}</label>
+                  <label class="compare_row_value truncate-stat" matTooltip="{{compareProtein1.geneOntology}}">{{compareProtein1.geneOntology}}</label>
                 </div>
               </div>
             </mat-card-content>
@@ -219,23 +223,23 @@
               <div class="statistics-container">
                 <div class="compare_row">
                   <label class="compare_row_title">Identifiant protéine :</label>
-                  <label class="compare_row_value">{{proteinCount}}</label>
+                  <label class="compare_row_value truncate-stat" matTooltip="{{compareProtein2.entry}}">{{compareProtein2.entry}}</label>
                 </div>
                 <div class="compare_row">
                   <label class="compare_row_title">Nom scientifique :</label>
-                  <label class="compare_row_value">{{undescribedProteinCount}}</label>
+                  <label class="compare_row_value truncate-stat"  matTooltip="{{compareProtein2.proteinNames}}">{{compareProtein2.proteinNames}}</label>
                 </div>
                 <div class="compare_row">
                   <label class="compare_row_title">InterPro :</label>
-                  <label class="compare_row_value">{{undescribedProteinCount}}</label>
+                  <label class="compare_row_value truncate-stat" matTooltip="{{compareProtein2.interPro}}">{{compareProtein2.interPro}}</label>
                 </div>
                 <div class="compare_row">
                   <label class="compare_row_title">Séquence :</label>
-                  <label class="compare_row_value">{{undescribedProteinCount}}</label>
+                  <label class="compare_row_value truncate-stat" matTooltip="{{compareProtein2.sequence}}">{{compareProtein2.sequence}}</label>
                 </div>
                 <div class="compare_row">
                   <label class="compare_row_title">Ontologie :</label>
-                  <label class="compare_row_value">{{undescribedProteinCount}}</label>
+                  <label class="compare_row_value truncate-stat" matTooltip="{{compareProtein2.geneOntology}}">{{compareProtein2.geneOntology}}</label>
                 </div>
               </div>
             </mat-card-content>
@@ -244,13 +248,14 @@
         <form class="compare_form">
           <mat-form-field class="compare_form_field">
             <mat-label>Protéine 1</mat-label>
-            <input matInput>
+            <input matInput (keyup)="updateCompare1($event)">
           </mat-form-field>
           <mat-form-field class="compare_form_field">
             <mat-label>Protéine 2</mat-label>
-            <input matInput>
+            <input matInput (keyup)="updateCompare2($event)">
           </mat-form-field>
         </form>
+        <button mat-raised-button color="accent" (click)="computeSearchForComparison()">Comparer les protéines</button>
       </mat-card>
     </div>
   </mat-tab>
