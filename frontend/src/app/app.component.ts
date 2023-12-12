@@ -18,8 +18,6 @@ export class AppComponent {
   links: LinkModel[] = [];
   inputValue: string = '';
   inputValueMongoDB: string = '';
-  dataSourceProtein: ProteinModel = ProteinModel.EMPTY_PROTEIN;
-  dataSourceNeighbours: ProteinModel[] = [];
   options: string[] = ["Entry","EntryName","ProteinNames"];
   selectedOption: string = "";
   dataSourceProteins: ProteinModel[] = [];
@@ -47,13 +45,13 @@ export class AppComponent {
   public generateNodesForNeighborsOfNeighbors(proteinLinks: ProteinlinksModel[]) {
     this.nodes = [];
     this.links = [];
-    this.nodes.push(new NodeModel(this.dataSourceProteins[0].entry, this.dataSourceProteins[0].entryName));
+    this.nodes.push(new NodeModel(this.dataSourceProteins[0].entry, this.dataSourceProteins[0].entryName, this.dataSourceProteins[0]));
     for (let proteinLink of proteinLinks) {
-      let nodeNeighbour = new NodeModel(proteinLink.neighbor.entry, proteinLink.neighbor.entryName);
+      let nodeNeighbour = new NodeModel(proteinLink.neighbor.entry, proteinLink.neighbor.entryName, proteinLink.neighbor);
       if (!this.nodeNeighbour.find(node => node.id === nodeNeighbour.id)) {
         this.nodeNeighbour.push(nodeNeighbour);
       }
-      let nodeNeighbourOfNeighbour = new NodeModel(proteinLink.neighborOfNeighbor.entry, proteinLink.neighborOfNeighbor.entryName);
+      let nodeNeighbourOfNeighbour = new NodeModel(proteinLink.neighborOfNeighbor.entry, proteinLink.neighborOfNeighbor.entryName, proteinLink.neighborOfNeighbor);
       if (!this.nodeNeighbour.find(node => node.id === nodeNeighbourOfNeighbour.id)) {
         this.nodeNeighbour.push(nodeNeighbourOfNeighbour);
       }

@@ -1,8 +1,6 @@
 export class ProteinModel {
 
-  public static EMPTY_PROTEIN: ProteinModel = new ProteinModel(null, '', '', '', '', '', '', '');
-
-  id: any;
+  public static EMPTY_PROTEIN: ProteinModel = new ProteinModel('', '', '', '', '', '', '');
   entry: string;
   entryName: string;
   proteinNames: string;
@@ -11,8 +9,7 @@ export class ProteinModel {
   ecNumber: string;
   geneOntology: string;
 
-  constructor(id: any, entry: string, entryName: string, proteinNames: string, interPro: string, sequence: string, ecNumber: string, geneOntology: string) {
-    this.id = id;
+  constructor(entry: string, entryName: string, proteinNames: string, interPro: string, sequence: string, ecNumber: string, geneOntology: string) {
     this.entry = entry;
     this.entryName = entryName;
     this.proteinNames = proteinNames;
@@ -20,5 +17,15 @@ export class ProteinModel {
     this.sequence = sequence;
     this.ecNumber = ecNumber;
     this.geneOntology = geneOntology;
+  }
+
+  public showInfos(): string {
+    return "Entry: " + this.entry + "\n" +
+      "Entry name: " + this.entryName + "\n" +
+      "Protein names: " + this.proteinNames + "\n" +
+      "InterPro: " + this.interPro + "\n" +
+      "Sequence: " + this.sequence + "\n" +
+      "EC number: " + this.ecNumber + "\n" +
+      "Gene ontology: " + this.geneOntology;
   }
 }

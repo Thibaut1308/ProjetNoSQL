@@ -165,9 +165,11 @@ public class Connector {
             return session.executeRead(tx -> {
                 Result result = tx.run(
                         """
-                        MATCH (protein:Protein {proteinNames: $proteinNames})
-                        RETURN DISTINCT protein;
-                        """,
+                           MATCH (protein:Protein)
+                           WHERE LOWER(protein.proteinNames) CONTAINS LOWER($proteinNames)
+                           RETURN DISTINCT protein
+                           LIMIT 1;
+                           """,
                         Values.parameters("proteinNames", proteinNames)
                 );
                 ProteinDataBuilder proteinDataBuilder = new ProteinDataBuilder();

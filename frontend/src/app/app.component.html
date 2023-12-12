@@ -20,6 +20,9 @@
             (click)="display(nodes)"
             class="node"
             ngx-tooltip
+            [tooltipPlacement]="'top'"
+            [tooltipType]="'tooltip'"
+            [tooltipTitle]="nodes.protein.showInfos()"
           >
             <svg:rect
               [attr.width]="nodes.dimension.width"

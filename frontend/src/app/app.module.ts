@@ -21,6 +21,7 @@ import {ClipboardModule } from 'ngx-clipboard';
 import {MatSnackBarModule} from "@angular/material/snack-bar";
 import {MatProgressBarModule} from "@angular/material/progress-bar";
 import {MatPaginatorModule} from "@angular/material/paginator";
+import {NgxChartsModule} from "@swimlane/ngx-charts";
 
 @NgModule({
   declarations: [
@@ -29,6 +30,7 @@ import {MatPaginatorModule} from "@angular/material/paginator";
   imports: [
     BrowserModule,
     NgxGraphModule,
+    NgxChartsModule,
     BrowserAnimationsModule,
     HttpClientModule,
     AppRoutingModule,
