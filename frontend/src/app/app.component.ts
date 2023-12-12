@@ -1,12 +1,12 @@
-import {AfterViewInit, Component, ViewChild} from '@angular/core';
-import {NodeModel} from "./model/node.model";
-import {LinkModel} from "./model/link.model";
-import {ProteinModel} from "./model/protein.model";
-import {ProteinService} from "./services/protein.service";
-import {ProteinlinksModel} from "./model/proteinlinks.model";
-import {Subject} from "rxjs";
-import {ColaForceDirectedLayout, DagreClusterLayout, DagreLayout, Layout} from "@swimlane/ngx-graph";
-import {MatSnackBar} from "@angular/material/snack-bar";
+import { Component } from '@angular/core';
+import { NodeModel } from "./model/node.model";
+import { LinkModel } from "./model/link.model";
+import { ProteinModel } from "./model/protein.model";
+import { ProteinService } from "./services/protein.service";
+import { ProteinlinksModel } from "./model/proteinlinks.model";
+import { Subject } from "rxjs";
+import { ColaForceDirectedLayout, DagreLayout, Layout } from "@swimlane/ngx-graph";
+import { MatSnackBar } from "@angular/material/snack-bar";
 
 @Component({
   selector: 'app-root',
@@ -18,7 +18,7 @@ export class AppComponent {
   links: LinkModel[] = [];
   inputValue: string = '';
   inputValueMongoDB: string = '';
-  options: string[] = ["Entry","EntryName","ProteinNames"];
+  options: string[] = ["Entry", "EntryName", "ProteinNames"];
   selectedOption: string = "";
   dataSourceProteins: ProteinModel[] = [];
   nodeNeighbour: NodeModel[] = [];
@@ -27,11 +27,12 @@ export class AppComponent {
   colarLayout: ColaForceDirectedLayout = new ColaForceDirectedLayout();
   degreLayout: DagreLayout = new DagreLayout();
   layout: Layout;
-  optionForMongo: string[] = ["Entry","EntryName","Protein Names","InterPro", "Sequence", "EC Number", "Gene Ontology"];
-  selectedOptionMongoDB: string= "";
-  displayedColumn: string[] = ['entry', 'entryName', 'proteinNames','interPro','sequence','ecNumber','geneOntology']
+  optionForMongo: string[] = ["Entry", "EntryName", "Protein Names", "InterPro", "Sequence", "EC Number", "Gene Ontology"];
+  selectedOptionMongoDB: string = "";
+  displayedColumn: string[] = ['entry', 'entryName', 'proteinNames', 'interPro', 'sequence', 'ecNumber', 'geneOntology']
   proteinList: ProteinModel[] = [];
   searching: boolean = false;
+  displayedStatisticColumns: string[] = ['statistic', 'value'];
 
   constructor(private proteinService: ProteinService,
               private _snackBar: MatSnackBar) {
@@ -96,7 +97,7 @@ export class AppComponent {
     });
   }
 
-  updateChart(){
+  updateChart() {
     this.update$.next(true);
   }
 
@@ -105,7 +106,7 @@ export class AppComponent {
     if (nodeToChange) {
       nodeModel = nodeToChange;
     }
-    if (! nodeModel.expanded) {
+    if (!nodeModel.expanded) {
       let linksOfNode = this.linkNeighbour.filter(link => link.source === nodeModel.id);
       for (let link of linksOfNode) {
         let nodeNeighbour = this.nodeNeighbour.find(node => node.id === link.target);
@@ -177,7 +178,7 @@ export class AppComponent {
       temp.push(data);
       this.proteinList = temp;
       this.searching = false;
-    },error => {
+    }, error => {
       this.displayErrorSnackbar()
       this.searching = false;
     });
@@ -190,7 +191,7 @@ export class AppComponent {
       console.log(data);
       this.proteinList = data;
       this.searching = false;
-    },error => {
+    }, error => {
       this.displayErrorSnackbar()
       this.searching = false;
     })
@@ -203,7 +204,7 @@ export class AppComponent {
       console.log(data);
       this.proteinList = data;
       this.searching = false;
-    },error => {
+    }, error => {
       this.displayErrorSnackbar()
       this.searching = false;
     })
@@ -218,7 +219,7 @@ export class AppComponent {
       temp.push(data);
       this.proteinList = temp;
       this.searching = false;
-    },error => {
+    }, error => {
       this.displayErrorSnackbar()
       this.searching = false;
     })
@@ -231,7 +232,7 @@ export class AppComponent {
       console.log(data);
       this.proteinList = data;
       this.searching = false;
-    },error => {
+    }, error => {
       this.displayErrorSnackbar()
       this.searching = false;
     })
@@ -244,7 +245,7 @@ export class AppComponent {
       console.log(data);
       this.proteinList = data;
       this.searching = false;
-    },error => {
+    }, error => {
       this.displayErrorSnackbar()
       this.searching = false;
     })
@@ -257,7 +258,7 @@ export class AppComponent {
       console.log(data);
       this.proteinList = data;
       this.searching = false;
-    },error => {
+    }, error => {
       this.displayErrorSnackbar()
       this.searching = false;
     })
@@ -265,11 +266,11 @@ export class AppComponent {
 
   async copyToClipboard(value: string) {
     await navigator.clipboard.writeText(value);
-    this._snackBar.open("Copier dans le presse-papier","Fermer",{duration:1000})
+    this._snackBar.open("Copier dans le presse-papier", "Fermer", {duration: 1000})
   }
 
   displayErrorSnackbar() {
-    this._snackBar.open("Protéine non trouvée？","Fermer",{duration:1000})
+    this._snackBar.open("Protéine non trouvée？", "Fermer", {duration: 1000})
   }
 
   switchLayout($event: any) {
