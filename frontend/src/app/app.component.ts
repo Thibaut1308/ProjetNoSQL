@@ -53,12 +53,24 @@ export class AppComponent {
     this.nodes.push(new NodeModel(this.dataSourceProteins[0].entry, this.dataSourceProteins[0].entryName, this.dataSourceProteins[0]));
     for (let proteinLink of proteinLinks) {
       let nodeNeighbour = new NodeModel(proteinLink.neighbor.entry, proteinLink.neighbor.entryName, proteinLink.neighbor);
-      if (!this.nodeNeighbour.find(node => node.id === nodeNeighbour.id)) {
+      let nodePrevious = this.nodeNeighbour.find(node => node.id === nodeNeighbour.id);
+      if (!nodePrevious) {
         this.nodeNeighbour.push(nodeNeighbour);
+        nodePrevious = nodeNeighbour;
+      }
+      if (parseFloat(proteinLink.jaccardSourceNeighbor) >= 0.8) {
+        this.dataSourceProteins[0] = this.mergeProteins(this.dataSourceProteins[0], nodePrevious.protein);
+        nodePrevious.protein = this.mergeProteins(nodePrevious.protein, this.dataSourceProteins[0]);
       }
       let nodeNeighbourOfNeighbour = new NodeModel(proteinLink.neighborOfNeighbor.entry, proteinLink.neighborOfNeighbor.entryName, proteinLink.neighborOfNeighbor);
-      if (!this.nodeNeighbour.find(node => node.id === nodeNeighbourOfNeighbour.id)) {
+      let nodeNeighbourOfNeighbourPrevious = this.nodeNeighbour.find(node => node.id === nodeNeighbourOfNeighbour.id);
+      if (!nodeNeighbourOfNeighbourPrevious) {
         this.nodeNeighbour.push(nodeNeighbourOfNeighbour);
+        nodeNeighbourOfNeighbourPrevious = nodeNeighbourOfNeighbour;
+      }
+      if (parseFloat(proteinLink.jaccardNeighborNeighborOfNeighbor) >= 0.8) {
+        nodePrevious.protein = this.mergeProteins(nodePrevious.protein, nodeNeighbourOfNeighbourPrevious.protein);
+        nodeNeighbourOfNeighbourPrevious.protein = this.mergeProteins(nodeNeighbourOfNeighbourPrevious.protein, nodePrevious.protein);
       }
       if (!this.linkNeighbour.find(link => link.source === this.dataSourceProteins[0].entry && link.target === proteinLink.neighbor.entry)) {
         this.linkNeighbour.push(new LinkModel(this.dataSourceProteins[0].entry + proteinLink.neighbor.entry, this.dataSourceProteins[0].entry, proteinLink.neighbor.entry, proteinLink.jaccardSourceNeighbor));
@@ -69,6 +81,30 @@ export class AppComponent {
     }
     console.log(this.nodeNeighbour);
     console.log(this.linkNeighbour);
+  }
+
+  public mergeProteins(protein1: ProteinModel, protein2: ProteinModel): ProteinModel {
+    const mergedProtein = new ProteinModel('', '', '', '', '', '', '');
+
+    const keys: (keyof ProteinModel)[] = ["entry", "entryName", "proteinNames", "interPro", "sequence", "ecNumber", "geneOntology"];
+
+    keys.forEach(key => {
+      const value1 = protein1[key];
+      const value2 = protein2[key];
+
+      if (this.isDefaultOrEmpty(value1)) {
+        mergedProtein[key] = this.isDefaultOrEmpty(value2) ? 'inconnu' : value2;
+      } else {
+        mergedProtein[key] = value1;
+      }
+    });
+
+    return mergedProtein;
+  }
+
+
+  public isDefaultOrEmpty(value: string): boolean {
+    return value === '' || value === 'default';
   }
 
   public reloadWithEntry() {
@@ -295,5 +331,12 @@ export class AppComponent {
     this.proteinService.getUndescribedProteinCount().subscribe(data => {
       this.undescribedProteinCount = data.length;
     })
+  }
+
+  displayNodeInfos(nodes: NodeModel): string {
+    return "Entry: " + nodes.protein.entry + "\n" +
+      "||| Entry name: " + nodes.protein.entryName + "\n" +
+      "||| Protein names: " + nodes.protein.proteinNames + "\n" +
+      "||| EC number: " + nodes.protein.ecNumber + "\n";
   }
 }
