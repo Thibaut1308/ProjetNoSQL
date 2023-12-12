@@ -18,18 +18,13 @@
         <ng-template #nodeTemplate let-nodes>
           <svg:g
             (click)="display(nodes)"
-            class="node"
-            ngx-tooltip
-            [tooltipPlacement]="'top'"
-            [tooltipType]="'tooltip'"
-            [tooltipTitle]="nodes.protein.showInfos()"
-          >
+            class="node">
             <svg:rect
               [attr.width]="nodes.dimension.width"
               [attr.height]="nodes.dimension.height"
               [attr.fill]="nodes.data.color"
             />
-            <svg:text alignment-baseline="central" [attr.x]="10" [attr.y]="nodes.dimension.height / 2">
+            <svg:text [matTooltip]="nodes.protein" alignment-baseline="central" [attr.x]="10" [attr.y]="nodes.dimension.height / 2">
               {{nodes.label}}
             </svg:text>
           </svg:g>
