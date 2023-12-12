@@ -43,4 +43,9 @@ public class MongoDBController {
     public List<ProteinData> getProteinFromInterpro(@PathVariable("interpro") String interpro) {
         return mongoDBDao.getProteinByInterPro(interpro);
     }
+
+    @GetMapping("/proteinNames/{proteinNames}")
+    public List<ProteinData> getProteinByNames(@PathVariable("proteinNames") String proteinNames) {
+        return mongoDBDao.getProteinByName(proteinNames);
+    }
 }

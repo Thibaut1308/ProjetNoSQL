@@ -79,7 +79,7 @@ public class MongoDBDao {
     public List<ProteinData> getProteinByName(String name) {
         List<ProteinData> results = new ArrayList<>();
         String regex = ".*"+name+".*";
-        Document query = new Document("fr.lesbg.Protein names", new Document("$regex", regex));
+        Document query = new Document("Protein names", new Document("$regex", regex));
         collection.find(query).forEach(doc -> {
             Document temp = (Document) doc;
             results.add(gson.fromJson(temp.toJson(), ProteinData.class));
