@@ -9,7 +9,7 @@
     <div class="neo4j_container">
       <ngx-graph
         class="chart-container"
-        [layout]="colaForceDirectedLayout"
+        [layout]="layout"
         [links]="links"
         [nodes]="nodes"
         [update$]="update$"
@@ -69,6 +69,10 @@
         </mat-form-field>
         <button (click)="search()" mat-stroked-button color="primary">Rechercher</button>
       </form>
+      <label class="switch">
+        <input type="checkbox" (change)="switchLayout($event)">
+        <span class="slider round"></span>
+      </label>
     </div>
 
   </mat-tab>
