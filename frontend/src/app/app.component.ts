@@ -85,8 +85,6 @@ export class AppComponent {
         this.linkNeighbour.push(new LinkModel(proteinLink.neighbor.entry + proteinLink.neighborOfNeighbor.entry, proteinLink.neighbor.entry, proteinLink.neighborOfNeighbor.entry, proteinLink.jaccardNeighborNeighborOfNeighbor));
       }
     }
-    console.log(this.nodeNeighbour);
-    console.log(this.linkNeighbour);
   }
 
   public mergeProteins(protein1: ProteinModel, protein2: ProteinModel): ProteinModel {
@@ -179,13 +177,9 @@ export class AppComponent {
         this.reloadWithProteinNames()
       }
     }
-
-    console.log(this.selectedOption);
   }
 
   public mongoSearch() {
-    console.log(this.selectedOptionMongoDB);
-    console.log(this.inputValueMongoDB);
     switch (this.selectedOptionMongoDB) {
       case "Entry":
         this.getProteinByEntryId();
@@ -228,7 +222,6 @@ export class AppComponent {
     let temp: ProteinModel[] = [];
     this.searching = true;
     this.proteinService.getProteinByEntryId(this.inputValueMongoDB).subscribe(data => {
-      console.log(data);
       temp.push(data);
       this.proteinList = temp;
       this.searching = false;
@@ -242,7 +235,6 @@ export class AppComponent {
     this.proteinList = [];
     this.searching = true;
     this.proteinService.getProteinByGO(this.inputValueMongoDB).subscribe(data => {
-      console.log(data);
       this.proteinList = data;
       this.searching = false;
     }, error => {
@@ -255,7 +247,6 @@ export class AppComponent {
     this.proteinList = [];
     this.searching = true;
     this.proteinService.getProteinBySequence(this.inputValueMongoDB).subscribe(data => {
-      console.log(data);
       this.proteinList = data;
       this.searching = false;
     }, error => {
@@ -269,7 +260,6 @@ export class AppComponent {
     let temp: ProteinModel[] = [];
     this.searching = true;
     this.proteinService.getProteinByEntryName(this.inputValueMongoDB).subscribe(data => {
-      console.log(data);
       temp.push(data);
       this.proteinList = temp;
       this.searching = false;
@@ -283,7 +273,6 @@ export class AppComponent {
     this.proteinList = [];
     this.searching = true;
     this.proteinService.getProteinByDescription(this.inputValueMongoDB).subscribe(data => {
-      console.log(data);
       this.proteinList = data;
       this.searching = false;
     }, error => {
@@ -296,7 +285,6 @@ export class AppComponent {
     this.proteinList = [];
     this.searching = true;
     this.proteinService.getProteinByInterPro(this.inputValueMongoDB).subscribe(data => {
-      console.log(data);
       this.proteinList = data;
       this.searching = false;
     }, error => {
@@ -309,7 +297,6 @@ export class AppComponent {
     this.proteinList = [];
     this.searching = true;
     this.proteinService.getProteinByProteinNames(this.inputValueMongoDB).subscribe(data => {
-      console.log(data);
       this.proteinList = data;
       this.searching = false;
     }, error => {
@@ -358,7 +345,6 @@ export class AppComponent {
       this.compareProtein1 = data;
     });
     this.proteinService.getProteinByEntryId(this.compareProteinEntry2).subscribe(data => {
-      console.log(data);
       this.compareProtein2 = data;
     })
   }
