@@ -1,6 +1,7 @@
 <mat-toolbar color="primary" class="toolbar">
-  <h1>
-    Parce que c'est notre projet !!!!!!!! - Macron
+  <img class="toolbar_logo" src = "assets/protein.png"/>
+  <h1 class="toolbar_title">
+    ProtBook
   </h1>
 </mat-toolbar>
 <mat-tab-group>
@@ -166,29 +167,92 @@
   </mat-tab>
   <mat-tab class="dashboard_tab" label="Statistiques">
     <mat-divider></mat-divider>
-
-    <!-- Ajouter votre tableau à deux colonnes ici -->
-    <div class="statistics-container">
-      <table mat-table [dataSource]="[]" class="mat-elevation-z8">
-
-        <ng-container matColumnDef="statistic">
-          <th mat-header-cell *matHeaderCellDef> Statistique</th>
-          <td mat-cell *matCellDef="let element"> {{element.statistic}} </td>
-        </ng-container>
-
-        <ng-container matColumnDef="value">
-          <th mat-header-cell *matHeaderCellDef> Valeur</th>
-          <td mat-cell *matCellDef="let element"> {{element.value}} </td>
-        </ng-container>
-
-        <!-- Ajouter d'autres colonnes si nécessaire -->
-
-        <tr mat-header-row *matHeaderRowDef="displayedStatisticColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedStatisticColumns;"></tr>
-      </table>
+    <div class="stats_body">
+      <mat-card class="stats_card">
+        <mat-card-header class="card_header"><label class="card_title">Statistiques Globales</label></mat-card-header>
+        <mat-divider></mat-divider>
+        <mat-card-content>
+          <div class="statistics-container">
+            <div class="statistic_row">
+              <label class="statistic_row_title">Protéines dans la banque :</label>
+              <label class="statistic_row_value">{{proteinCount}}</label>
+            </div>
+            <div class="statistic_row">
+              <label class="statistic_row_title">Protéines sans description :</label>
+              <label class="statistic_row_value">{{undescribedProteinCount}}</label>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+      <mat-card class="stats_card">
+        <mat-card-header class="card_header"><label class="card_title">Comparaison de protéines</label></mat-card-header>
+        <mat-divider></mat-divider>
+        <mat-card-content class="compare_body">
+          <mat-card class="stats_card">
+            <mat-card-content>
+              <div class="statistics-container">
+                <div class="compare_row">
+                  <label class="compare_row_title">Identifiant protéine :</label>
+                  <label class="compare_row_value">{{proteinCount}}</label>
+                </div>
+                <div class="compare_row">
+                  <label class="compare_row_title">Nom scientifique :</label>
+                  <label class="compare_row_value">{{undescribedProteinCount}}</label>
+                </div>
+                <div class="compare_row">
+                  <label class="compare_row_title">InterPro :</label>
+                  <label class="compare_row_value">{{undescribedProteinCount}}</label>
+                </div>
+                <div class="compare_row">
+                  <label class="compare_row_title">Séquence :</label>
+                  <label class="compare_row_value">{{undescribedProteinCount}}</label>
+                </div>
+                <div class="compare_row">
+                  <label class="compare_row_title">Ontologie :</label>
+                  <label class="compare_row_value">{{undescribedProteinCount}}</label>
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-card >
+          <mat-card class="stats_card">
+            <mat-card-content>
+              <div class="statistics-container">
+                <div class="compare_row">
+                  <label class="compare_row_title">Identifiant protéine :</label>
+                  <label class="compare_row_value">{{proteinCount}}</label>
+                </div>
+                <div class="compare_row">
+                  <label class="compare_row_title">Nom scientifique :</label>
+                  <label class="compare_row_value">{{undescribedProteinCount}}</label>
+                </div>
+                <div class="compare_row">
+                  <label class="compare_row_title">InterPro :</label>
+                  <label class="compare_row_value">{{undescribedProteinCount}}</label>
+                </div>
+                <div class="compare_row">
+                  <label class="compare_row_title">Séquence :</label>
+                  <label class="compare_row_value">{{undescribedProteinCount}}</label>
+                </div>
+                <div class="compare_row">
+                  <label class="compare_row_title">Ontologie :</label>
+                  <label class="compare_row_value">{{undescribedProteinCount}}</label>
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </mat-card-content>
+        <form class="compare_form">
+          <mat-form-field class="compare_form_field">
+            <mat-label>Protéine 1</mat-label>
+            <input matInput>
+          </mat-form-field>
+          <mat-form-field class="compare_form_field">
+            <mat-label>Protéine 2</mat-label>
+            <input matInput>
+          </mat-form-field>
+        </form>
+      </mat-card>
     </div>
-
-    <mat-divider></mat-divider>
   </mat-tab>
 
 </mat-tab-group>

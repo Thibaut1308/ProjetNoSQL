@@ -2,7 +2,15 @@
 
 .toolbar {
   display: flex;
-  justify-content: center;
+  height: 50px;
+}
+
+.toolbar_title {
+  font-size: 30px;
+  margin-left: 30px;
+}
+
+.toolbar_logo {
   height: 50px;
 }
 
@@ -76,4 +84,89 @@
 
 .copy_label {
   cursor: pointer;
+}
+
+.stats_body {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  margin-top: 50px;
+  height: 500px;
+}
+
+.stats_card {
+  width: 40%;
+  height: fit-content;
+}
+
+.card_header {
+  display: flex;
+  justify-content: center;
+  height: 40px;
+  background-color: aliceblue;
+}
+
+.card_title {
+  font-weight: bold;
+  font-size: 25px;
+}
+
+.statistics-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.statistic_row {
+  display: flex;
+  flex-direction: row;
+  margin-top: 50px;
+}
+
+.statistic_row_title {
+  display: flex;
+  width: 50%;
+  font-weight: bold;
+  font-size: 20px;
+}
+
+.statistic_row_value {
+  display: flex;
+  width: 50%;
+  font-size: 20px;
+}
+
+.compare_body {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  margin-top: 20px;
+}
+
+.compare_row_title {
+  display: flex;
+  width: 60%;
+  font-weight: bold;
+  font-size: 10px;
+}
+
+.compare_row_value {
+  display: flex;
+  width: 40%;
+  font-size: 10px;
+}
+
+.compare_row {
+  display: flex;
+  flex-direction: row;
+  margin-top: 20px;
+}
+
+.compare_form_field {
+  height: 60px;
+}
+
+.compare_form {
+  display: flex;
+  justify-content: space-evenly;
+  margin-top: 20px;
 }

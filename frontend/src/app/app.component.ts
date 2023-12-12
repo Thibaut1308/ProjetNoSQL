@@ -33,10 +33,14 @@ export class AppComponent {
   proteinList: ProteinModel[] = [];
   searching: boolean = false;
   displayedStatisticColumns: string[] = ['statistic', 'value'];
+  proteinCount: number = 0;
+  undescribedProteinCount: number =0;
 
   constructor(private proteinService: ProteinService,
               private _snackBar: MatSnackBar) {
     this.layout = this.colarLayout;
+    this.getProteinCount();
+    this.getUndescribedProteinCount();
   }
 
   public updateInput($event: KeyboardEvent) {
@@ -279,5 +283,17 @@ export class AppComponent {
     } else {
       this.layout = this.colarLayout;
     }
+  }
+
+  getProteinCount() {
+    this.proteinService.getProteinCount().subscribe(data => {
+      this.proteinCount = data;
+    })
+  }
+
+  getUndescribedProteinCount() {
+    this.proteinService.getUndescribedProteinCount().subscribe(data => {
+      this.undescribedProteinCount = data.length;
+    })
   }
 }

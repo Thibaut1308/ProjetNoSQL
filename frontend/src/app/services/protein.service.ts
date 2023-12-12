@@ -80,4 +80,16 @@ export class ProteinService {
     });
   }
 
+  public getProteinCount(): Observable<number> {
+    return this.http.get<number>(this.mongoDomain + "/proteinCount",{
+      headers: new HttpHeaders().set('Content-Type', 'application/json')
+    });
+  }
+
+  public getUndescribedProteinCount(): Observable<ProteinModel[]> {
+    return this.http.get<ProteinModel[]>(this.mongoDomain + "/undescribedProteinCount",{
+      headers: new HttpHeaders().set('Content-Type', 'application/json')
+    });
+  }
+
 }
