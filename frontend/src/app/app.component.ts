@@ -215,6 +215,14 @@ export class AppComponent {
     this.inputValueMongoDB = ($event.target as HTMLInputElement).value;
   }
 
+  public updateCompare1($event: KeyboardEvent) {
+    this.compareProteinEntry1 = ($event.target as HTMLInputElement).value;
+  }
+
+  public updateCompare2($event: KeyboardEvent) {
+    this.compareProteinEntry2 = ($event.target as HTMLInputElement).value;
+  }
+
   public getProteinByEntryId() {
     this.proteinList = [];
     let temp: ProteinModel[] = [];
