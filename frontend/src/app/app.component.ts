@@ -5,7 +5,7 @@ import {ProteinModel} from "./model/protein.model";
 import {ProteinService} from "./services/protein.service";
 import {ProteinlinksModel} from "./model/proteinlinks.model";
 import {Subject} from "rxjs";
-import {ColaForceDirectedLayout} from "@swimlane/ngx-graph";
+import {ColaForceDirectedLayout, DagreClusterLayout, DagreLayout, Layout} from "@swimlane/ngx-graph";
 import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
@@ -26,9 +26,10 @@ export class AppComponent {
   nodeNeighbour: NodeModel[] = [];
   linkNeighbour: LinkModel[] = [];
   update$: Subject<any> = new Subject();
-  colaForceDirectedLayout: ColaForceDirectedLayout = new ColaForceDirectedLayout();
+  colarLayout: ColaForceDirectedLayout = new ColaForceDirectedLayout();
+  degreLayout: DagreLayout = new DagreLayout();
+  layout: Layout;
   optionForMongo: string[] = ["Entry","EntryName","Protein Names","InterPro", "Sequence", "EC Number", "Gene Ontology"];
-  dataSourceNeighboursOfNeighbours: ProteinlinksModel[] = [];
   selectedOptionMongoDB: string= "";
   displayedColumn: string[] = ['entry', 'entryName', 'proteinNames','interPro','sequence','ecNumber','geneOntology']
   proteinList: ProteinModel[] = [];
@@ -36,6 +37,7 @@ export class AppComponent {
 
   constructor(private proteinService: ProteinService,
               private _snackBar: MatSnackBar) {
+    this.layout = this.colarLayout;
   }
 
   public updateInput($event: KeyboardEvent) {
@@ -55,8 +57,12 @@ export class AppComponent {
       if (!this.nodeNeighbour.find(node => node.id === nodeNeighbourOfNeighbour.id)) {
         this.nodeNeighbour.push(nodeNeighbourOfNeighbour);
       }
-      this.linkNeighbour.push(new LinkModel(this.dataSourceProteins[0].entry + proteinLink.neighbor.entry, this.dataSourceProteins[0].entry, proteinLink.neighbor.entry, proteinLink.jaccardSourceNeighbor));
-      this.linkNeighbour.push(new LinkModel(proteinLink.neighbor.entry + proteinLink.neighborOfNeighbor.entry, proteinLink.neighbor.entry, proteinLink.neighborOfNeighbor.entry, proteinLink.jaccardNeighborNeighborOfNeighbor));
+      if (!this.linkNeighbour.find(link => link.source === this.dataSourceProteins[0].entry && link.target === proteinLink.neighbor.entry)) {
+        this.linkNeighbour.push(new LinkModel(this.dataSourceProteins[0].entry + proteinLink.neighbor.entry, this.dataSourceProteins[0].entry, proteinLink.neighbor.entry, proteinLink.jaccardSourceNeighbor));
+      }
+      if (!this.linkNeighbour.find(link => link.source === proteinLink.neighbor.entry && link.target === proteinLink.neighborOfNeighbor.entry)) {
+        this.linkNeighbour.push(new LinkModel(proteinLink.neighbor.entry + proteinLink.neighborOfNeighbor.entry, proteinLink.neighbor.entry, proteinLink.neighborOfNeighbor.entry, proteinLink.jaccardNeighborNeighborOfNeighbor));
+      }
     }
     console.log(this.nodeNeighbour);
     console.log(this.linkNeighbour);
@@ -96,33 +102,21 @@ export class AppComponent {
     this.update$.next(true);
   }
 
-  public display(node: NodeModel) {
-    // find all links where node.id is source
-    let links = this.links.filter(link => link.source === node.id);
-    if (links.length === 0) {
-      let linksNeighbor = this.linkNeighbour.filter(link => link.source === node.id);
-      let nodesNeighbor : NodeModel[] = [];
-      for (let linkNeighbor of linksNeighbor) {
-        let nodeNeighbor = this.nodeNeighbour.find(node => node.id === linkNeighbor.target);
-        if (nodeNeighbor && !nodesNeighbor.find(node => node.id === nodeNeighbor?.id) && !this.nodes.find(node => node.id === nodeNeighbor?.id)) {
-          nodesNeighbor.push(nodeNeighbor);
+  public display(nodeModel: NodeModel) {
+    let nodeToChange = this.nodes.find(node => node.id === nodeModel.id);
+    if (nodeToChange) {
+      nodeModel = nodeToChange;
+    }
+    if (! nodeModel.expanded) {
+      let linksOfNode = this.linkNeighbour.filter(link => link.source === nodeModel.id);
+      for (let link of linksOfNode) {
+        let nodeNeighbour = this.nodeNeighbour.find(node => node.id === link.target);
+        if (nodeNeighbour && !this.nodes.find(node => node.id === nodeNeighbour?.id)) {
+          this.nodes.push(nodeNeighbour);
         }
+        this.links.push(link);
       }
-      this.nodes.push(...nodesNeighbor);
-      this.links.push(...linksNeighbor);
-    } else { // remove all links and neighbor nodes
-      let linksNeighbor = this.links.filter(link => link.source === node.id);
-      let nodesNeighbor : NodeModel[] = [];
-      for (let linkNeighbor of linksNeighbor) {
-        let nodeNeighbor = this.nodes.find(node => node.id === linkNeighbor.target);
-        if (nodeNeighbor) {
-          if (this.links.filter(node => node.target === nodeNeighbor?.id).length < 2) {
-            nodesNeighbor.push(nodeNeighbor);
-          }
-        }
-      }
-      this.nodes = this.nodes.filter(node => !nodesNeighbor.find(nodeNeighbor => nodeNeighbor.id === node.id));
-      this.links = this.links.filter(link => !linksNeighbor.find(linkNeighbor => linkNeighbor.id === link.id));
+      nodeModel.expanded = true;
     }
     this.updateChart();
   }
@@ -278,5 +272,13 @@ export class AppComponent {
 
   displayErrorSnackbar() {
     this._snackBar.open("没有蛋白质，你是傻子吗？","Oui !",{duration:5000})
+  }
+
+  switchLayout($event: any) {
+    if ($event.currentTarget.checked) {
+      this.layout = this.degreLayout;
+    } else {
+      this.layout = this.colarLayout;
+    }
   }
 }
