@@ -191,6 +191,10 @@
               <label class="statistic_row_title">Protéines sans interpro :</label>
               <label class="statistic_row_value">{{noInterProtein}}</label>
             </div>
+            <div class="statistic_row">
+              <label class="statistic_row_title">Séquence la plus présente :</label>
+              <label class="statistic_row_value">{{mostUsedInterPro}}</label>
+            </div>
           </div>
         </mat-card-content>
       </mat-card>
@@ -251,6 +255,10 @@
             </mat-card-content>
           </mat-card>
         </mat-card-content>
+        <div class="communInterpro_body">
+          <label class="communInterpro_title">Interpro en commun :</label>
+          <label class="communInterpro_value">{{communInterpro}}</label>
+        </div>
         <form class="compare_form">
           <mat-form-field class="compare_form_field">
             <mat-label>Protéine 1</mat-label>
@@ -261,10 +269,9 @@
             <input matInput (keyup)="updateCompare2($event)">
           </mat-form-field>
         </form>
-        <button mat-raised-button color="accent" (click)="computeSearchForComparison()">Comparer les protéines</button>
+        <button mat-raised-button color="primary" (click)="getCommunInterpro()">Comparer les protéines</button>
       </mat-card>
     </div>
   </mat-tab>
-
 </mat-tab-group>
 

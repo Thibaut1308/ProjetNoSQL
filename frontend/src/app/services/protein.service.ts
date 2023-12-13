@@ -3,6 +3,7 @@ import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {ProteinModel} from "../model/protein.model";
 import {Observable} from "rxjs";
 import {ProteinlinksModel} from "../model/proteinlinks.model";
+import {StatisticModel} from "../model/statistic.model";
 
 @Injectable({
   providedIn: 'root'
@@ -10,6 +11,7 @@ import {ProteinlinksModel} from "../model/proteinlinks.model";
 export class ProteinService {
   private domain: string = "http://localhost:8080/neo4j";
   private mongoDomain: string = "http://localhost:8080/mongodb"
+  private statisticDomain: string = "http://localhost:8080/statistic"
 
   constructor(private http: HttpClient) {
   }
@@ -98,4 +100,15 @@ export class ProteinService {
     });
   }
 
+  public getStatistic(): Observable<StatisticModel[]> {
+    return this.http.get<StatisticModel[]>(this.statisticDomain +"/globals",{
+      headers: new HttpHeaders().set('Content-Type', 'application/json')
+    });
+  }
+
+  public compareProteins(p1: string, p2: string): Observable<StatisticModel[]> {
+    return this.http.get<StatisticModel[]>(this.statisticDomain +"/" + p1 + "/" + p2,{
+      headers: new HttpHeaders().set('Content-Type', 'application/json')
+    });
+  }
 }

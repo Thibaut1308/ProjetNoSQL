@@ -7,6 +7,7 @@ import { ProteinlinksModel } from "./model/proteinlinks.model";
 import { Subject } from "rxjs";
 import { ColaForceDirectedLayout, DagreLayout, Layout } from "@swimlane/ngx-graph";
 import { MatSnackBar } from "@angular/material/snack-bar";
+import {StatisticModel} from "./model/statistic.model";
 
 @Component({
   selector: 'app-root',
@@ -33,11 +34,13 @@ export class AppComponent {
   proteinList: ProteinModel[] = [];
   searching: boolean = false;
   displayedStatisticColumns: string[] = ['statistic', 'value'];
-  proteinCount: number = 0;
-  undescribedProteinCount: number = 0;
-  noInterProtein: number = 0;
+  proteinCount: string = "";
+  undescribedProteinCount: string = "";
+  noInterProtein: string = "";
+  mostUsedInterPro: string = "";
   compareProteinEntry1: string ="";
   compareProteinEntry2: string ="";
+  communInterpro: string = "";
   compareProtein1: ProteinModel = new ProteinModel("","","","","","","");
   compareProtein2: ProteinModel = new ProteinModel("","","","","","","");
 
@@ -45,8 +48,7 @@ export class AppComponent {
   constructor(private proteinService: ProteinService,
               private _snackBar: MatSnackBar) {
     this.layout = this.colarLayout;
-    this.getProteinCount();
-    this.getUndescribedProteinCount();
+    this.getGlobalStatistic();
   }
 
   public updateInput($event: KeyboardEvent) {
@@ -322,24 +324,6 @@ export class AppComponent {
     }
   }
 
-  getProteinCount() {
-    this.proteinService.getProteinCount().subscribe(data => {
-      this.proteinCount = data;
-    })
-  }
-
-  getUndescribedProteinCount() {
-    this.proteinService.getUndescribedProteinCount().subscribe(data => {
-      this.undescribedProteinCount = data.length;
-    })
-  }
-
-  getNoInterProteinCount() {
-    this.proteinService.getNoInterProteinCount().subscribe(data => {
-      this.noInterProtein = data.length;
-    })
-  }
-
   computeSearchForComparison() {
     this.proteinService.getProteinByEntryId(this.compareProteinEntry1).subscribe(data => {
       this.compareProtein1 = data;
@@ -354,5 +338,21 @@ export class AppComponent {
       "||| Entry name: " + nodes.protein.entryName + "\n" +
       "||| Protein names: " + nodes.protein.proteinNames + "\n" +
       "||| EC number: " + nodes.protein.ecNumber + "\n";
+  }
+
+  getGlobalStatistic(): void{
+    this.proteinService.getStatistic().subscribe( data => {
+      this.proteinCount = data[0].value;
+      this.undescribedProteinCount = data[1].value;
+      this.mostUsedInterPro = data[2].value;
+      this.noInterProtein = data[3].value;
+    });
+  }
+
+  getCommunInterpro(): void {
+    this.computeSearchForComparison();
+    this.proteinService.compareProteins(this.compareProteinEntry1,this.compareProteinEntry2).subscribe(data => {
+      this.communInterpro = data[0].value;
+    })
   }
 }
