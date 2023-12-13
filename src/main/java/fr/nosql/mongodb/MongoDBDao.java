@@ -1,12 +1,15 @@
 package fr.nosql.mongodb;
 
-import com.mongodb.client.model.Filters;
-import fr.nosql.protein.ProteinData;
 import com.google.gson.Gson;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.Accumulators;
+import com.mongodb.client.model.Aggregates;
+import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.Sorts;
+import fr.nosql.protein.ProteinData;
 import lombok.Getter;
 import lombok.Setter;
 import org.bson.Document;
@@ -27,6 +30,7 @@ public class MongoDBDao {
     private MongoDatabase database;
     private MongoCollection collection;
     private Gson gson = new Gson();
+
     public MongoDBDao() {
         setMongoClient(MongoClients.create("mongodb://localhost:27017/"));
         setDatabase(mongoClient.getDatabase("UniProt"));
@@ -44,7 +48,7 @@ public class MongoDBDao {
         if (result != null) {
             return result;
         }
-        synchronized(MongoDBDao.class) {
+        synchronized (MongoDBDao.class) {
             if (instance == null) {
                 instance = new MongoDBDao();
             }
@@ -66,14 +70,14 @@ public class MongoDBDao {
         Document query = new Document("Entry", id);
         Document result = (Document) collection.find(query).first();
 
-        return (result != null)?gson.fromJson(result.toJson(), ProteinData.class):null;
+        return (result != null) ? gson.fromJson(result.toJson(), ProteinData.class) : null;
     }
 
     public ProteinData getProteinByEntryName(String entryName) {
         Document query = new Document("Entry Name", entryName);
         Document result = (Document) collection.find(query).first();
 
-        return (result != null)?gson.fromJson(result.toJson(), ProteinData.class):null;
+        return (result != null) ? gson.fromJson(result.toJson(), ProteinData.class) : null;
     }
 
     /***
@@ -83,7 +87,7 @@ public class MongoDBDao {
      */
     public List<ProteinData> getProteinByName(String name) {
         List<ProteinData> results = new ArrayList<>();
-        String regex = ".*"+name+".*";
+        String regex = ".*" + name + ".*";
         Document query = new Document("Protein names", new Document("$regex", regex));
         collection.find(query).forEach(doc -> {
             Document temp = (Document) doc;
@@ -94,7 +98,7 @@ public class MongoDBDao {
 
     public List<ProteinData> getProteinByInterPro(String interPro) {
         List<ProteinData> results = new ArrayList<>();
-        String regex = ".*"+interPro+".*";
+        String regex = ".*" + interPro + ".*";
         Document query = new Document("InterPro", new Document("$regex", regex));
         collection.find(query).forEach(doc -> {
             Document temp = (Document) doc;
@@ -105,7 +109,7 @@ public class MongoDBDao {
 
     public List<ProteinData> getProteinBySequence(String sequence) {
         List<ProteinData> results = new ArrayList<>();
-        String regex = ".*"+sequence+".*";
+        String regex = ".*" + sequence + ".*";
         Document query = new Document("Sequence", new Document("$regex", regex));
         collection.find(query).forEach(doc -> {
             Document temp = (Document) doc;
@@ -116,7 +120,7 @@ public class MongoDBDao {
 
     public List<ProteinData> getProteinByGO(String geneOntology) {
         List<ProteinData> results = new ArrayList<>();
-        String regex = ".*"+geneOntology+".*";
+        String regex = ".*" + geneOntology + ".*";
         Document query = new Document("Gene Ontology (GO)", new Document("$regex", regex));
         collection.find(query).forEach(doc -> {
             Document temp = (Document) doc;
@@ -136,12 +140,65 @@ public class MongoDBDao {
     public List<ProteinData> getUndescribedProtein() {
         List<ProteinData> results = new ArrayList<>();
         collection.aggregate(Arrays.asList(
-                match(Filters.and(Filters.eq("EC Number",null), Filters.eq("Gene Ontology (GO)", null))))).forEach(doc -> {
+                match(Filters.and(Filters.eq("EC Number", null), Filters.eq("Gene Ontology (GO)", null))))).forEach(doc -> {
             Document temp = (Document) doc;
             results.add(gson.fromJson(temp.toJson(), ProteinData.class));
         });
         return results;
     }
 
+    public String mostUsedInterProSequence() {
+        Document result = (Document) collection.aggregate(Arrays.asList(
+                        Aggregates.match(Filters.ne("InterPro", null)),  // Filtrer les documents avec "InterPro" non nul
+                        Aggregates.group("$InterPro", Accumulators.sum("count", 1)),
+                        Aggregates.sort(Sorts.descending("count")),
+                        Aggregates.limit(1)))
+                .first();
 
+        if (result != null) {
+            return result.getString("_id");
+        } else {
+            return null;
+        }
+    }
+
+
+    public int countProteinsWithoutInterpro() {
+        Document result = (Document) collection.aggregate(Arrays.asList(
+                        Aggregates.match(Filters.eq("InterPro", null)),  // Filtrer les documents avec "InterPro" non nul
+                        Aggregates.group("$InterPro", Accumulators.sum("count", 1))))
+                .first();
+
+        if (result != null) {
+            System.out.println("Result Document: " + result.toJson());
+            return result.getInteger("count");
+        } else {
+            return 0;
+        }
+    }
+
+    public String getCommonInterPro(String entryFirst, String entrySecond) {
+        ProteinData firstProt = this.getProteinByEntryId(entryFirst);
+        ProteinData secondProt = this.getProteinByEntryId(entrySecond);
+
+        System.out.println(firstProt);
+        if (firstProt != null && secondProt != null) {
+            if (firstProt.getInterPro() == null || secondProt.getInterPro() == null) {
+                return null;
+            }
+            List<String> firstInterPro = Arrays.asList(firstProt.getInterPro().split(";"));
+            List<String> secondInterPro = Arrays.asList(secondProt.getInterPro().split(";"));
+            firstInterPro.retainAll(secondInterPro);
+            StringBuilder result = new StringBuilder();
+            for (String interPro : firstInterPro) {
+                result.append(interPro).append(";");
+            }
+            if (!result.isEmpty()) {
+                result.deleteCharAt(result.length() - 1);
+            }
+            return result.toString();
+        } else {
+            return null;
+        }
+    }
 }
